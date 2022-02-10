@@ -1,0 +1,11 @@
+# folders to ignore
+dist
+node_modules
+credentials
+
+# pnpm
+.pnpm-debug.log
+
+# other
+ignoreThis.txt
+ignore.json

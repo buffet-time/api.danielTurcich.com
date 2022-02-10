@@ -1,0 +1,30 @@
+{
+	"name": "buffetbotjsapi",
+	"version": "1.0.0",
+	"private": false,
+	"license": "Unlicense",
+	"main": "./dist/buffetBotJsApi/main.js",
+	"description": "API for my Node based Discord Bot",
+	"author": {
+		"email": "packagejson@danielTurcich.com",
+		"name": "Daniel Turcich",
+		"url": "https://danielTurcich.com"
+	},
+	"type": "module",
+	"scripts": {
+		"serve": "pnpm compile && pnpm execute",
+		"compile": "pnpm exec tsc",
+		"execute": "node ./dist/buffetBotJsApi/main.js"
+	},
+	"dependencies": {
+		"fastify": "^3.25.3",
+		"fastify-cors": "^6.0.2",
+		"googleapis": "39.2.0",
+		"snoowrap": "^1.23.0"
+	},
+	"devDependencies": {
+		"@types/node": "^17.0.10",
+		"google-auth-library": "3.1.2",
+		"typescript": "^4.5.2"
+	}
+}
