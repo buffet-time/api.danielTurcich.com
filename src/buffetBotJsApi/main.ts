@@ -29,8 +29,9 @@ fastify.get('/Reddit/Top/Femboy', async (_request, reply) => {
 		const redditResponse = await reddit
 			.getSubreddit('femboy')
 			.getHot({ limit: 1 })
-		const topPost = redditResponse.filter((post) => post.archived === false)
-		reply.send(topPost[0].url)
+		// pinned messages have stickied set to true
+		const topPost = redditResponse.filter((post) => post.stickied === false)
+		reply.send({ url: topPost[0].url })
 	} catch (error) {
 		console.log(`Error in /Reddit/Top/Femboy request:\n ${error}`)
 	}
@@ -40,6 +41,24 @@ fastify.get('/Reddit/Top/Femboy', async (_request, reply) => {
 async function start() {
 	try {
 		await fastify.listen(port)
+
+		const onStart = async () => {
+			try {
+				const gmailCredentialsPath = `./credentials/emailCredentials.json`
+				const gmailTokenPath = `./credentials/emailToken.json`
+				const gmailScopes = ['https://www.googleapis.com/auth/gmail.send']
+				const content = await FileSystem.readFile(gmailCredentialsPath, 'utf-8')
+				gmailAuthClient = await authorize({
+					credentials: JSON.parse(content),
+					scopes: gmailScopes,
+					tokenPath: gmailTokenPath
+				})
+			} catch (error) {
+				throw new Error('No emailCredentials.json, check readme.md')
+			}
+			console.log(`Listening on port: ${port}`)
+		}
+
 		onStart()
 	} catch (err) {
 		fastify.log.error(err)
@@ -47,23 +66,6 @@ async function start() {
 	}
 }
 start()
-
-async function onStart() {
-	try {
-		const gmailCredentialsPath = `./credentials/emailCredentials.json`
-		const gmailTokenPath = `./credentials/emailToken.json`
-		const gmailScopes = ['https://www.googleapis.com/auth/gmail.send']
-		const content = await FileSystem.readFile(gmailCredentialsPath, 'utf-8')
-		gmailAuthClient = await authorize({
-			credentials: JSON.parse(content),
-			scopes: gmailScopes,
-			tokenPath: gmailTokenPath
-		})
-	} catch (error) {
-		throw new Error('No emailCredentials.json, check readme.md')
-	}
-	console.log(`Listening on port: ${port}`)
-}
 
 function sendEmail(to: string, subject: string, message: string) {
 	try {
