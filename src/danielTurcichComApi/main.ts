@@ -1,16 +1,48 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { google as Google, type sheets_v4 } from 'googleapis'
+import { google, type sheets_v4 } from 'googleapis'
 import { Release } from '../shared/typings.js'
-import { default as Fastify } from 'fastify'
-import { default as FastifyCors } from 'fastify-cors'
+import Fastify from 'fastify'
+import FastifyCors from 'fastify-cors'
 import { authorize } from '../shared/googleApis.js'
 import FileSystem from 'fs/promises'
+import nodeFetch from 'node-fetch'
 
+// TYPES
+interface SpreadsheetParams {
+	id: string
+	range: string
+}
+
+// FAstify/ etc setup
 const fastify = Fastify()
 const port = 3000
 let sheets: sheets_v4.Sheets
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 fastify.register(FastifyCors)
+
+// standard variables
+const spreadsheets: SpreadsheetParams[] = [
+	{
+		id: '1tn0BmleHcs0okzWKhUnyOCWUPD422HvutpNQNzdAAIk',
+		range: 'Main!A2:F' // before
+	},
+	{
+		id: '1dmETb3Ybqs8Dhez_kP2DHiXR_Gqw-X56qsXDHYyTH1w',
+		range: 'Main!A2:F' // 2020
+	},
+	{
+		id: '18V5oypFBW3Bu_tHxfTL-iSbb9ALYrCJlMwLhpPmp72M',
+		range: 'Main!A2:G' // 2021
+	},
+	{
+		id: '1lyFD7uLMT0mRdGkKwvbIm_2pqk2YJU7rtRQVhHq-nwU',
+		range: 'Main!A2:G' // 2022
+	}
+]
+
+let releasesArray: string[][]
+let cachedCurrentYear: string[][]
 
 // Declare a route
 fastify.get('/Sheets', async (request: any, reply) => {
@@ -34,6 +66,15 @@ fastify.get('/Sheets', async (request: any, reply) => {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
 	// })
+})
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+fastify.get('/Releases', async (_request, reply) => {
+	try {
+		reply.send(releasesArray)
+	} catch (error) {
+		console.log(`Error in /Releases request:\n ${error}`)
+	}
 })
 
 // Run the server!
@@ -63,12 +104,59 @@ async function onStart() {
 			scopes: sheetsScopes,
 			tokenPath: sheetsTokenPath
 		})
-		sheets = Google.sheets({ version: 'v4', auth: sheetsAuthClient })
+		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient })
 	} catch (error) {
 		// TODO: readd readme.md
 		throw new Error('No sheetsCredentials.json, check readme.md')
 	}
+
+	await initializeSheets()
+
+	setupIntervals()
 	console.log(`Listening on port: ${port}`)
+}
+
+async function initializeSheets() {
+	const spreadsheetArrays = await Promise.all(
+		spreadsheets.map((current) => {
+			return getArray(current)
+		})
+	)
+
+	cachedCurrentYear = spreadsheetArrays.at(-1)!
+
+	releasesArray = spreadsheetArrays
+		.flat()
+		.filter((current: string[], index) => {
+			// makes sure to trim whitespaces of data coming in from the most recent year
+			// in sheets select all cells > data > data cleanup > trim whitespace
+			if (index === releasesArray.length - 1) {
+				current.forEach((element) => {
+					element.trim()
+				})
+			}
+			// makes sure to not include any not fully written reviews
+			return current.length > 5 && current[Release.score]
+		})
+}
+
+function setupIntervals() {
+	// in 2022
+	setInterval(async () => {
+		const retrievedCurrentYear = await getArray(spreadsheets.at(-1)!)
+		if (retrievedCurrentYear !== cachedCurrentYear) {
+			initializeSheets()
+		}
+	}, 1_800_000) // 30 minutes
+}
+
+// TODO: do caching on the API layer
+async function getArray(params: SpreadsheetParams): Promise<string[][]> {
+	return (
+		await nodeFetch(
+			`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
+		)
+	).json() as unknown as string[][]
 }
 
 async function getRows(
@@ -76,6 +164,7 @@ async function getRows(
 	range: string,
 	index?: number
 ): Promise<string[][]> {
+	// TODO refactor to async await
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
@@ -100,6 +189,7 @@ async function getNumberOfRows(
 	spreadsheetId: string,
 	range: string
 ): Promise<number> {
+	// TODO refactor to async await
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
