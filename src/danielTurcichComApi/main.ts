@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { google, type sheets_v4 } from 'googleapis'
 import { Release } from '../shared/typings.js'
@@ -11,6 +12,27 @@ import nodeFetch from 'node-fetch'
 interface SpreadsheetParams {
 	id: string
 	range: string
+}
+
+interface StatsObject {
+	numberOfReleases: string | number
+	averageYear: string | number
+	averageScore: string | number
+	numberOfArtists: string | number
+	releasesPerYear: number[]
+	currentYear: number
+	earliestYear: number
+}
+
+enum ReleasesIn {
+	'1950s',
+	'1960s',
+	'1970s',
+	'1980s',
+	'1990s',
+	'2000s',
+	'2010s',
+	'2020s'
 }
 
 // FAstify/ etc setup
@@ -42,6 +64,7 @@ const spreadsheets: SpreadsheetParams[] = [
 ]
 
 let releasesArray: string[][]
+let statsObject: StatsObject
 let cachedCurrentYear: string[][]
 
 // Declare a route
@@ -77,6 +100,15 @@ fastify.get('/Releases', async (_request, reply) => {
 	}
 })
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+fastify.get('/Stats', async (_request, reply) => {
+	try {
+		reply.send(statsObject)
+	} catch (error) {
+		console.log(`Error in /Stats request:\n ${error}`)
+	}
+})
+
 // Run the server!
 async function start() {
 	try {
@@ -91,6 +123,7 @@ async function start() {
 start()
 
 async function onStart() {
+	;``
 	try {
 		const sheetsTokenPath = `./credentials/sheetsToken.json`
 		const sheetsCredentialsPath = `./credentials/sheetsCredentials.json`
@@ -130,7 +163,7 @@ async function initializeSheets() {
 		.filter((current: string[], index) => {
 			// makes sure to trim whitespaces of data coming in from the most recent year
 			// in sheets select all cells > data > data cleanup > trim whitespace
-			if (index === releasesArray.length - 1) {
+			if (index === spreadsheetArrays.length - 1) {
 				current.forEach((element) => {
 					element.trim()
 				})
@@ -138,6 +171,66 @@ async function initializeSheets() {
 			// makes sure to not include any not fully written reviews
 			return current.length > 5 && current[Release.score]
 		})
+
+	const artistArray: string[] = []
+	const currentYear = new Date().getFullYear()
+	let earliestYear = currentYear
+
+	let scoreCount = 0
+	let questionMarkScoreCount = 0
+	let yearCount = 0
+	let tempScore = 0
+	let tempYear = 0
+
+	const releasePerYear: number[] = []
+
+	// returns the values of the enum and them in reverse so divide by 2
+	for (let x = 0; x < Object.keys(ReleasesIn).length / 2; x++) {
+		releasePerYear.push(0)
+	}
+
+	// for readability
+	function isNum(value: string) {
+		return !isNaN(Number(value))
+	}
+
+	releasesArray.forEach((current) => {
+		if (!artistArray.includes(current[Release.artist])) {
+			artistArray.push(current[Release.artist])
+		}
+
+		const curYear = Number(current[Release.year])
+
+		if (curYear < earliestYear) {
+			earliestYear = curYear
+		}
+
+		tempYear += curYear
+		yearCount++
+
+		if (isNum(current[Release.score])) {
+			tempScore += Number(current[Release.score])
+			scoreCount++
+		} else if (current[Release.score] == '?') {
+			questionMarkScoreCount++
+		}
+
+		curYear > 1959
+			? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			  // @ts-expect-error
+			  releasePerYear[ReleasesIn[current[Release.year].slice(0, 3) + '0s']]++
+			: releasePerYear[ReleasesIn['1950s']]++
+	})
+
+	statsObject = {
+		averageScore: (tempScore / scoreCount).toFixed(2),
+		numberOfArtists: artistArray.length,
+		averageYear: (tempYear / yearCount).toFixed(2),
+		numberOfReleases: scoreCount + questionMarkScoreCount,
+		releasesPerYear: releasePerYear,
+		currentYear: currentYear,
+		earliestYear: earliestYear
+	}
 }
 
 function setupIntervals() {
