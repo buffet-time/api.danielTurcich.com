@@ -1,0 +1,26 @@
+{
+	"name": "buffetbotjsapi",
+	"version": "1.0.0",
+	"private": false,
+	"main": "./dist/musicChartApi/main.js",
+	"description": "API for the Music",
+	"author": {
+		"email": "packagejson@danielTurcich.com",
+		"name": "Daniel Turcich",
+		"url": "https://danielTurcich.com"
+	},
+	"type": "module",
+	"scripts": {
+		"serve": "pnpm compile && pnpm execute",
+		"compile": "pnpm exec tsc",
+		"execute": "node ./dist/musicChartApi/main.js"
+	},
+	"dependencies": {
+		"fastify": "^3.25.3",
+		"fastify-cors": "^6.0.2"
+	},
+	"devDependencies": {
+		"@types/node": "^17.0.10",
+		"typescript": "^4.5.2"
+	}
+}
