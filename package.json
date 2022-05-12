@@ -13,7 +13,8 @@
 	"scripts": {
 		"website:serve": "cd ./src/danielTurcichComApi/ && pnpm serve",
 		"bot:serve": "cd ./src/buffetBotJsApi/ && pnpm serve",
-		"misc:serve": "cd ./src/miscApi/ && pnpm serve"
+		"misc:serve": "cd ./src/miscApi/ && pnpm serve",
+		"chart:serve": "cd ./src/musicChartApi/ && pnpm serve"
 	},
 	"dependencies": {
 		"@octokit/request": "^5.6.3",
