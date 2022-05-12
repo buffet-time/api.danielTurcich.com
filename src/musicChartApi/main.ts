@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { default as Fastify } from 'fastify'
-import { lastFmApiKey } from './credentials/apiKey'
+import { lastFmApiKey } from './credentials/apiKey.js'
 import { AlbumReturn, type AlbumResults } from './types'
+import { default as FastifyCors } from '@fastify/cors'
 
 const fastify = Fastify()
 const port = 3030 //deltron
+
+fastify.register(FastifyCors)
 
 fastify.get('/Search', async (request: any, reply) => {
 	try {

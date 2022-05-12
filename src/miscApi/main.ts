@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { type GithubTreeResponse } from '../shared/typings.js'
 import { githubToken } from './credentials/credentials.js'
@@ -8,6 +9,7 @@ import { default as FastifyCors } from 'fastify-cors'
 const fastify = Fastify()
 const port = 3002
 
+// @ts-expect-error
 fastify.register(FastifyCors)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
