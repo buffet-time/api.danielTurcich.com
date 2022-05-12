@@ -13,7 +13,7 @@
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
 		"compile": "pnpm exec tsc",
-		"execute": "node ./dist/main.js --trace-warnings --experimental-fetch"
+		"execute": "node ./dist/main.js"
 	},
 	"dependencies": {
 		"@fastify/cors": "^7.0.0",
