@@ -13,11 +13,12 @@
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
 		"compile": "pnpm exec tsc",
-		"execute": "node ./dist/main.js"
+		"execute": "node ./dist/main.js --trace-warnings --experimental-fetch"
 	},
 	"dependencies": {
 		"@fastify/cors": "^7.0.0",
-		"fastify": "^3.29.0"
+		"fastify": "^3.29.0",
+		"node-fetch": "^3.2.1"
 	},
 	"devDependencies": {
 		"@types/node": "^17.0.32",

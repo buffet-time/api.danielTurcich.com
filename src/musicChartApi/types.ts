@@ -5,20 +5,22 @@ export interface AlbumReturn {
 }
 
 export interface AlbumResults {
-	'opensearch:Query': {
-		'#text': string
-		role: string
-		searchTerms: string
-		startPage: string
-	}
-	'opensearch:totalResults': string
-	'opensearch:startIndex': string
-	'opensearch:itemsPerPage': string
-	albummatches: {
-		album: Album[]
-	}
-	'@attr': {
-		for: string
+	results: {
+		'opensearch:Query': {
+			'#text': string
+			role: string
+			searchTerms: string
+			startPage: string
+		}
+		'opensearch:totalResults': string
+		'opensearch:startIndex': string
+		'opensearch:itemsPerPage': string
+		albummatches: {
+			album: Album[]
+		}
+		'@attr': {
+			for: string
+		}
 	}
 }
 
