@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { default as Fastify } from 'fastify'
 import { lastFmApiKey } from './credentials/apiKey.js'
 import { AlbumReturn, type AlbumResults } from './types'
-import { default as FastifyCors } from '@fastify/cors'
 import fetch from 'node-fetch'
+import Fastify from 'fastify'
+import FastifyCors from '@fastify/cors'
 
 const fastify = Fastify()
 const port = 3030 //deltron
@@ -60,7 +60,11 @@ start()
 
 async function start() {
 	try {
-		await fastify.listen(port)
+		fastify.listen(port, (error) => {
+			if (error) {
+				console.log(error)
+			}
+		})
 		console.log(`Listening on port: ${port}`)
 	} catch (err) {
 		fastify.log.error(err)

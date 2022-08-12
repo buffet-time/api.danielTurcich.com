@@ -24,7 +24,11 @@ fastify.get('/Github', async (_request, reply) => {
 // Run the server!
 async function start() {
 	try {
-		await fastify.listen(port)
+		fastify.listen(port, (error) => {
+			if (error) {
+				console.log(error)
+			}
+		})
 		console.log(`Listening on port: ${port}`)
 	} catch (err) {
 		fastify.log.error(err)

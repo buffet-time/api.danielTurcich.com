@@ -1,0 +1,17 @@
+// Ignore this :)
+
+api.danielturcich.com {
+reverse_proxy localhost:2080
+}
+
+botapi.danielturcich.com {
+reverse_proxy localhost:1080
+}
+
+miscapi.danielturcich.com {
+reverse_proxy localhost:111222
+}
+
+musicsheet.danielturcich.com {
+reverse_proxy localhost:3030
+}

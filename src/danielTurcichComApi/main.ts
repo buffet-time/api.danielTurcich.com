@@ -3,7 +3,7 @@
 import { google, type sheets_v4 } from 'googleapis'
 import { Release } from '../shared/typings.js'
 import Fastify from 'fastify'
-import FastifyCors from 'fastify-cors'
+import FastifyCors from '@fastify/cors'
 import { authorize } from '../shared/googleApis.js'
 import FileSystem from 'fs/promises'
 import nodeFetch from 'node-fetch'
@@ -37,7 +37,7 @@ enum ReleasesIn {
 
 // FAstify/ etc setup
 const fastify = Fastify()
-const port = 3000
+const port = 2080
 let sheets: sheets_v4.Sheets
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -74,10 +74,15 @@ fastify.get('/Sheets', async (request: any, reply) => {
 		const range = request.query.range as string
 		const index = Number(request.query.index as string)
 		const rows = request.query.rows as string
+		const nonMusic = request.query.nonmusic as string
 		let returnValue
 
 		if (rows === 'true') {
-			returnValue = await getNumberOfRows(id, range)
+			if (nonMusic === 'true') {
+				returnValue = await getNumberOfRows(id, range, true)
+			} else {
+				returnValue = await getNumberOfRows(id, range)
+			}
 		} else if (index === 0 || index) {
 			returnValue = await getRows(id, range, index)
 		} else {
@@ -112,7 +117,11 @@ fastify.get('/Stats', async (_request, reply) => {
 // Run the server!
 async function start() {
 	try {
-		await fastify.listen(port)
+		fastify.listen(port, (error) => {
+			if (error) {
+				console.log(error)
+			}
+		})
 		onStart()
 	} catch (err) {
 		console.log(err)
@@ -280,7 +289,8 @@ async function getRows(
 
 async function getNumberOfRows(
 	spreadsheetId: string,
-	range: string
+	range: string,
+	nonMusic?: boolean
 ): Promise<number> {
 	// TODO refactor to async await
 	return new Promise((resolve) =>
@@ -292,7 +302,8 @@ async function getNumberOfRows(
 			(_err, res) => {
 				if (res && res.data.values) {
 					for (let n = res.data.values.length - 1; n > 0; n--) {
-						if (rowIsFilledOut(res.data.values[n])) {
+						// TODO: ENHANCE THIS TO ALLOW THE BOT TO USE THINGS BESIDES MUSIC HERE
+						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
 							resolve(n + 1)
 						} else {
 							console.log('Res or Res Values was undefined in getNumberOfRows.')
@@ -304,8 +315,16 @@ async function getNumberOfRows(
 	)
 }
 
-function rowIsFilledOut(row: string[]): boolean {
+function rowIsFilledOut(row: string[], nonMusic?: boolean): boolean {
+	if (nonMusic) {
+		if (row && row[0] && row[1] && row[2] && row[3] && row[4]) {
+			return true
+		}
+		return false
+	}
+
 	if (
+		row &&
 		row[Release.score] &&
 		row[Release.comments] &&
 		row[Release.artist] &&
@@ -315,7 +334,6 @@ function rowIsFilledOut(row: string[]): boolean {
 		row[Release.genre]
 	) {
 		return true
-	} else {
-		return false
 	}
+	return false
 }

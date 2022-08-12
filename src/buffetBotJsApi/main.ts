@@ -9,7 +9,7 @@ import { type OAuth2Client } from 'google-auth-library'
 
 const reddit = new snoowrap(redditCredentials)
 const fastify = Fastify()
-const port = 3001
+const port = 1080
 let gmailAuthClient: OAuth2Client
 
 fastify.get('/Email', async (request: any, reply) => {
@@ -40,7 +40,11 @@ fastify.get('/Reddit/Top/Femboy', async (_request, reply) => {
 // Run the server!
 async function start() {
 	try {
-		await fastify.listen(port)
+		fastify.listen(port, (error) => {
+			if (error) {
+				console.log(error)
+			}
+		})
 
 		const onStart = async () => {
 			try {
