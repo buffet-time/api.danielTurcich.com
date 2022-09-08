@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { google } from 'googleapis'
+import { google, Auth } from 'googleapis'
 import { authorize } from '../shared/googleApis.js'
-import FileSystem from 'fs/promises'
 import { redditCredentials } from './credentials/credentials.js'
 import Fastify from 'fastify'
 import snoowrap from 'snoowrap'
@@ -9,7 +8,7 @@ import snoowrap from 'snoowrap'
 const reddit = new snoowrap(redditCredentials)
 const fastify = Fastify()
 const port = 1080
-// let gmailAuthClient: OAuth2Client
+let gmailAuthClient: Auth.OAuth2Client
 
 fastify.get(
 	'/Email',
@@ -55,12 +54,9 @@ async function start() {
 
 		const onStart = async () => {
 			try {
-				const gmailCredentialsPath = `./credentials/emailCredentials.json`
 				const gmailTokenPath = `./credentials/emailToken.json`
 				const gmailScopes = ['https://www.googleapis.com/auth/gmail.send']
-				const content = await FileSystem.readFile(gmailCredentialsPath, 'utf-8')
 				gmailAuthClient = await authorize({
-					credentials: JSON.parse(content),
 					scopes: gmailScopes,
 					tokenPath: gmailTokenPath
 				})

@@ -7,6 +7,8 @@ import { google, type sheets_v4 } from 'googleapis'
 import { authorize } from '../shared/googleApis.js'
 import { Release } from '../shared/typings.js'
 
+// TODO: breakup this massive file.
+
 // TYPES
 interface SpreadsheetParams {
 	id: string
