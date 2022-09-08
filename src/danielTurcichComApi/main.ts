@@ -6,7 +6,6 @@ import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
 import { authorize } from '../shared/googleApis.js'
 import FileSystem from 'fs/promises'
-import nodeFetch from 'node-fetch'
 
 // TYPES
 interface SpreadsheetParams {
@@ -117,7 +116,7 @@ fastify.get('/Stats', async (_request, reply) => {
 // Run the server!
 async function start() {
 	try {
-		fastify.listen(port, (error) => {
+		fastify.listen({ port: port }, (error) => {
 			if (error) {
 				console.log(error)
 			}
@@ -132,7 +131,6 @@ async function start() {
 start()
 
 async function onStart() {
-	;``
 	try {
 		const sheetsTokenPath = `./credentials/sheetsToken.json`
 		const sheetsCredentialsPath = `./credentials/sheetsCredentials.json`
@@ -255,7 +253,7 @@ function setupIntervals() {
 // TODO: do caching on the API layer
 async function getArray(params: SpreadsheetParams): Promise<string[][]> {
 	return (
-		await nodeFetch(
+		await fetch(
 			`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
 		)
 	).json() as unknown as string[][]
@@ -273,7 +271,7 @@ async function getRows(
 				spreadsheetId: spreadsheetId,
 				range: range
 			},
-			(error, response) => {
+			(error: any, response: any) => {
 				if (error || !response?.data.values) {
 					console.log(`Error in getRows():\n ${error}`)
 					resolve([])
@@ -299,7 +297,7 @@ async function getNumberOfRows(
 				spreadsheetId: spreadsheetId,
 				range: range
 			},
-			(_err, res) => {
+			(_err: any, res: any) => {
 				if (res && res.data.values) {
 					for (let n = res.data.values.length - 1; n > 0; n--) {
 						// TODO: ENHANCE THIS TO ALLOW THE BOT TO USE THINGS BESIDES MUSIC HERE
