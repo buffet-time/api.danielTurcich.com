@@ -27,7 +27,6 @@ export async function authorize({
 	})
 
 	if (client.credentials) {
-		console.log(5)
 		await saveCredentials()
 	}
 

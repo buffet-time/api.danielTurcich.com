@@ -156,15 +156,12 @@ async function onStart() {
 }
 
 async function initializeSheets() {
-	console.log(10, spreadsheets)
 	const spreadsheetArrays = await Promise.all(
-		spreadsheets.map((current, index) => {
-			console.log(100, index, current)
+		spreadsheets.map((current) => {
 			return getArray(current)
 		})
 	)
 
-	console.log(11)
 	cachedCurrentYear = spreadsheetArrays.at(-1)!
 
 	releasesArray = spreadsheetArrays
@@ -181,7 +178,6 @@ async function initializeSheets() {
 			return current.length > 5 && current[Release.score]
 		})
 
-	console.log(13)
 	const artistArray: string[] = []
 	const currentYear = new Date().getFullYear()
 	let earliestYear = currentYear
