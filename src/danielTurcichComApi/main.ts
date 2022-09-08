@@ -1,11 +1,11 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { google, type sheets_v4 } from 'googleapis'
-import { Release } from '../shared/typings.js'
+import path from 'path'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
+import { google, type sheets_v4 } from 'googleapis'
 import { authorize } from '../shared/googleApis.js'
-import FileSystem from 'fs/promises'
+import { Release } from '../shared/typings.js'
 
 // TYPES
 interface SpreadsheetParams {
@@ -132,22 +132,21 @@ start()
 
 async function onStart() {
 	try {
-		const sheetsTokenPath = `./credentials/sheetsToken.json`
-		const sheetsCredentialsPath = `./credentials/sheetsCredentials.json`
+		const sheetsTokenPath = path.join(
+			process.cwd(),
+			'./credentials/sheetsToken.json'
+		)
 		const sheetsScopes = [
 			'https://www.googleapis.com/auth/spreadsheets.readonly'
 		] // If modifying these scopes, delete token.json.
 
-		const content = await FileSystem.readFile(sheetsCredentialsPath, 'utf-8')
 		const sheetsAuthClient = await authorize({
-			credentials: JSON.parse(content),
 			scopes: sheetsScopes,
 			tokenPath: sheetsTokenPath
 		})
 		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient })
-	} catch (error) {
-		// TODO: readd readme.md
-		throw new Error('No sheetsCredentials.json, check readme.md')
+	} catch (error: any) {
+		throw new Error('Error in onStart(): ', error)
 	}
 
 	await initializeSheets()
@@ -157,12 +156,15 @@ async function onStart() {
 }
 
 async function initializeSheets() {
+	console.log(10, spreadsheets)
 	const spreadsheetArrays = await Promise.all(
-		spreadsheets.map((current) => {
+		spreadsheets.map((current, index) => {
+			console.log(100, index, current)
 			return getArray(current)
 		})
 	)
 
+	console.log(11)
 	cachedCurrentYear = spreadsheetArrays.at(-1)!
 
 	releasesArray = spreadsheetArrays
@@ -179,6 +181,7 @@ async function initializeSheets() {
 			return current.length > 5 && current[Release.score]
 		})
 
+	console.log(13)
 	const artistArray: string[] = []
 	const currentYear = new Date().getFullYear()
 	let earliestYear = currentYear
