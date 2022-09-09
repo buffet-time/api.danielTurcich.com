@@ -27,8 +27,7 @@
 		"paths": {
 			"@shared/*": ["src/shared/*"]
 		},
-		"types": ["node"],
-		"lib": ["esnext", "dom", "scripthost"]
+		"lib": ["esnext", "scripthost"]
 	},
-	"exclude": ["node_modules", "*.js"]
+	"exclude": ["node_modules"]
 }
