@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { google, Auth } from 'googleapis'
 import { authorize } from '../shared/googleApis.js'
 import { redditCredentials } from './credentials/credentials.js'
@@ -15,38 +14,32 @@ console.log(0.4)
 let gmailAuthClient: Auth.OAuth2Client
 console.log(0.5)
 
-fastify.get(
-	'/Email',
-	async (request: any, reply: { send: (arg0: string) => void }) => {
-		try {
-			const to = request.query.to as string
-			const subject = request.query.subject as string
-			const message = request.query.message as string
+fastify.get('/Email', async (request: any, reply: any) => {
+	try {
+		const to = request.query.to as string
+		const subject = request.query.subject as string
+		const message = request.query.message as string
 
-			reply.send(sendEmail(to, subject, message))
-		} catch (error) {
-			console.log(`Error in /Email request:\n ${error}`)
-		}
+		reply.send(sendEmail(to, subject, message))
+	} catch (error) {
+		console.log(`Error in /Email request:\n ${error}`)
 	}
-)
+})
 
-fastify.get(
-	'/Reddit/Top/Femboy',
-	async (_request: any, reply: { send: (arg0: { url: any }) => void }) => {
-		try {
-			const redditResponse = await reddit
-				.getSubreddit('femboy')
-				.getHot({ limit: 1 })
-			// pinned messages have stickied set to true
-			const topPost = redditResponse.filter(
-				(post: { stickied: boolean }) => post.stickied === false
-			)
-			reply.send({ url: topPost[0].url })
-		} catch (error) {
-			console.log(`Error in /Reddit/Top/Femboy request:\n ${error}`)
-		}
+fastify.get('/Reddit/Top/Femboy', async (_request: any, reply: any) => {
+	try {
+		const redditResponse = await reddit
+			.getSubreddit('femboy')
+			.getHot({ limit: 1 })
+		// pinned messages have stickied set to true
+		const topPost = redditResponse.filter(
+			(post: { stickied: boolean }) => post.stickied === false
+		)
+		reply.send({ url: topPost[0].url })
+	} catch (error) {
+		console.log(`Error in /Reddit/Top/Femboy request:\n ${error}`)
 	}
-)
+})
 
 // Run the server!
 async function start() {
