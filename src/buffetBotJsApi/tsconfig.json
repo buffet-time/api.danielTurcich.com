@@ -5,5 +5,6 @@
 		"outDir": "dist"
 	},
 
-	"include": ["./*.ts", "./credentials/*.ts", "../types/global.d.ts"]
+	"include": ["./*.ts", "./credentials/*.ts", "../types/global.d.ts"],
+	"exclude": ["node_modules", "dist"]
 }

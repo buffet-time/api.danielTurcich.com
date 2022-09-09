@@ -26,6 +26,5 @@
 		"baseUrl": ".",
 		"rootDir": ".",
 		"lib": ["esnext", "scripthost"]
-	},
-	"exclude": ["node_modules"]
+	}
 }

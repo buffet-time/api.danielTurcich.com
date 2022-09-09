@@ -55,6 +55,7 @@ async function start() {
 					tokenPath: gmailTokenPath
 				})
 			} catch (error) {
+				console.log('Error in onstart', error)
 				throw new Error('No emailCredentials.json, check readme.md')
 			}
 			console.log(`Listening on port: ${port}`)
@@ -62,6 +63,7 @@ async function start() {
 
 		onStart()
 	} catch (err) {
+		console.log('Error in start()', err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
