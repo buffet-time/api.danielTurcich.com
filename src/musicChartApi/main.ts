@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { lastFmApiKey } from './credentials/apiKey.js'
-import { AlbumReturn, AlbumResults } from './types'
+import { AlbumReturn, AlbumResults } from '../types/typings'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
 import { ProperFetch } from '../shared/shared.js'

@@ -12,7 +12,7 @@
 	"type": "module",
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
-		"compile": "pnpm exec tsc",
+		"compile": "pnpm tsc --build",
 		"execute": "node ./dist/main.js"
 	},
 	"dependencies": {
