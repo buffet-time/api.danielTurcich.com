@@ -13,7 +13,7 @@
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
 		"compile": "pnpm tsc --build",
-		"execute": "node ./dist/main.js"
+		"execute": "node ./dist/musicChartApi/main.js"
 	},
 	"dependencies": {
 		"@fastify/cors": "^8.1.0",
