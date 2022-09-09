@@ -11,10 +11,9 @@
 	},
 	"type": "module",
 	"scripts": {
-		"website:serve": "cd ./src/danielTurcichComApi/ && pnpm serve",
 		"bot:serve": "cd ./src/buffetBotJsApi/ && pnpm serve",
-		"misc:serve": "cd ./src/miscApi/ && pnpm serve",
-		"chart:serve": "cd ./src/musicChartApi/ && pnpm serve"
+		"chart:serve": "cd ./src/musicChartApi/ && pnpm serve",
+		"website:serve": "cd ./src/danielTurcichComApi/ && pnpm serve"
 	},
 	"dependencies": {
 		"@google-cloud/local-auth": "2.1.0",

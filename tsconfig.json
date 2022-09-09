@@ -25,9 +25,6 @@
 
 		"baseUrl": ".",
 		"rootDir": ".",
-		"paths": {
-			"@shared/*": ["src/shared/*"]
-		},
 		"lib": ["esnext", "scripthost"]
 	},
 	"include": ["**/*.ts", "./src/types/global.d.ts"],
