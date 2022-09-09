@@ -24,7 +24,7 @@ export interface AlbumResults {
 	}
 }
 
-export interface Album {
+interface Album {
 	name: string
 	artist: string
 	url: string

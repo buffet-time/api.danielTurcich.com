@@ -3,9 +3,10 @@
 import path from 'path'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
-import { google, type sheets_v4 } from 'googleapis'
+import { google, sheets_v4 } from 'googleapis'
 import { authorize } from '../shared/googleApis.js'
 import { Release } from '../types/typings.js'
+import { ProperFetch } from '../shared/shared.js'
 
 // TODO: breakup this massive file.
 
@@ -254,11 +255,9 @@ function setupIntervals() {
 // TODO: do caching on the API layer
 async function getArray(params: SpreadsheetParams): Promise<string[][]> {
 	// TODO: looks like fetch global .d.ts isnt loading
-	return (
-		await fetch(
-			`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
-		)
-	).json() as unknown as string[][]
+	return ProperFetch(
+		`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
+	) as unknown as string[][]
 }
 
 async function getRows(
