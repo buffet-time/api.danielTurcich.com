@@ -7,6 +7,5 @@ credentials
 .pnpm-debug.log
 
 # other
-ignoreThis.txt
 ignore.json
 googleCreds.json

@@ -1,0 +1,11 @@
+For my own usage :)
+
+Server: Caddy
+Editor: Nano
+Process Management: PM2
+Package Mangament JS: PNPM
+
+pm2 start "cd APIs && pnpm website:serve" --name websiteApi
+pm2 start "cd APIs && pnpm bot:serve" --name botApi
+pm2 start "cd APIs && pnpm chart:serve" --name chartApi
+pm2 start "cd buffetbotjs && pnpm serve" --name bot

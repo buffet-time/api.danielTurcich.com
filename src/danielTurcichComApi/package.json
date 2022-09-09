@@ -13,7 +13,7 @@
 	"type": "module",
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
-		"compile": "tsc",
+		"compile": "pnpm exec tsc",
 		"execute": "node ./dist/danielTurcichComApi/main.js"
 	},
 	"dependencies": {
