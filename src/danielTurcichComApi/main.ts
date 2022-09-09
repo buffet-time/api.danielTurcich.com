@@ -303,8 +303,6 @@ async function getNumberOfRows(
 						// TODO: ENHANCE THIS TO ALLOW THE BOT TO USE THINGS BESIDES MUSIC HERE
 						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
 							resolve(n + 1)
-						} else {
-							console.log('Res or Res Values was undefined in getNumberOfRows.')
 						}
 					}
 				}
