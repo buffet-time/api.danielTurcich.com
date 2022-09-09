@@ -4,15 +4,11 @@ import { redditCredentials } from './credentials/credentials.js'
 import Fastify from 'fastify'
 import snoowrap from 'snoowrap'
 
-console.log(0.1)
 const reddit = new snoowrap(redditCredentials)
-console.log(0.2)
 const fastify = Fastify()
-console.log(0.3)
 const port = 1080
-console.log(0.4)
+
 let gmailAuthClient: Auth.OAuth2Client
-console.log(0.5)
 
 fastify.get('/Email', async (request: any, reply: any) => {
 	try {
@@ -43,28 +39,22 @@ fastify.get('/Reddit/Top/Femboy', async (_request: any, reply: any) => {
 
 // Run the server!
 async function start() {
-	console.log(1)
 	try {
 		fastify.listen({ port: port }, (error: any) => {
-			console.log(2)
 			if (error) {
 				console.log(error)
 			}
 		})
 
-		console.log(3)
 		const onStart = async () => {
 			try {
-				console.log(4)
 				const gmailTokenPath = `./credentials/emailToken.json`
 				const gmailScopes = ['https://www.googleapis.com/auth/gmail.send']
 				gmailAuthClient = await authorize({
 					scopes: gmailScopes,
 					tokenPath: gmailTokenPath
 				})
-				console.log(4)
 			} catch (error) {
-				console.log(5, error)
 				throw new Error('No emailCredentials.json, check readme.md')
 			}
 			console.log(`Listening on port: ${port}`)
@@ -72,7 +62,6 @@ async function start() {
 
 		onStart()
 	} catch (err) {
-		console.log(6, err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
