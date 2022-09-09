@@ -2,7 +2,7 @@
 	"name": "musicchartapi",
 	"version": "1.0.0",
 	"private": false,
-	"main": "./dist/musicChartApi/main.js",
+	"main": "./dist/src/musicChartApi/main.js",
 	"description": "API for the Music",
 	"author": {
 		"email": "packagejson@danielTurcich.com",
@@ -13,7 +13,7 @@
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
 		"compile": "pnpm tsc",
-		"execute": "node ./dist/musicChartApi/main.js"
+		"execute": "node ./dist/src/musicChartApi/main.js"
 	},
 	"dependencies": {
 		"@fastify/cors": "^8.1.0",

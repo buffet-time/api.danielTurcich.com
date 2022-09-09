@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": false,
 	"license": "Unlicense",
-	"main": "./dist/buffetBotJsApi/main.js",
+	"main": "./dist/src/buffetBotJsApi/main.js",
 	"description": "API for my Node based Discord Bot",
 	"author": {
 		"email": "packagejson@danielTurcich.com",
@@ -14,7 +14,7 @@
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
 		"compile": "pnpm tsc",
-		"execute": "node ./dist/buffetBotJsApi/main.js"
+		"execute": "node ./dist/src/buffetBotJsApi/main.js"
 	},
 	"dependencies": {
 		"fastify": "^4.4.0",
