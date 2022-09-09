@@ -23,6 +23,7 @@
 		"noFallthroughCasesInSwitch": true,
 		"allowSyntheticDefaultImports": true,
 
+		"baseUrl": ".",
 		"paths": {
 			"@shared/*": ["src/shared/*"]
 		},
