@@ -2,7 +2,7 @@
 	"name": "buffetbotjsapi",
 	"version": "1.0.0",
 	"private": false,
-	"main": "./dist/main.js",
+	"main": "./dist/musicChartApi/main.js",
 	"description": "API for the Music",
 	"author": {
 		"email": "packagejson@danielTurcich.com",

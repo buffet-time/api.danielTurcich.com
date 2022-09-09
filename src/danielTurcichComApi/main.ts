@@ -252,9 +252,8 @@ function setupIntervals() {
 	}, 1_800_000) // 30 minutes
 }
 
-// TODO: do caching on the API layer
+// TODO: decouple this from referencing itself
 async function getArray(params: SpreadsheetParams): Promise<string[][]> {
-	// TODO: looks like fetch global .d.ts isnt loading
 	return ProperFetch(
 		`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
 	) as unknown as string[][]
