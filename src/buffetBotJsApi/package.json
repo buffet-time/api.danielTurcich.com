@@ -13,7 +13,7 @@
 	"type": "module",
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
-		"compile": "pnpm tsc --build",
+		"compile": "pnpm tsc",
 		"execute": "node ./dist/buffetBotJsApi/main.js"
 	},
 	"dependencies": {

@@ -27,6 +27,5 @@
 		"rootDir": ".",
 		"lib": ["esnext", "scripthost"]
 	},
-	"include": ["**/*.ts", "./src/types/global.d.ts"],
 	"exclude": ["node_modules"]
 }

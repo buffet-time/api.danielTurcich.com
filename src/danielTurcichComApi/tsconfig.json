@@ -3,5 +3,7 @@
 
 	"compilerOptions": {
 		"outDir": "dist"
-	}
+	},
+
+	"include": ["./*.ts", "./credentials/*.ts", "../types/global.d.ts"]
 }

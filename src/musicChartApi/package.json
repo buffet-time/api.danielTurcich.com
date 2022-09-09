@@ -1,5 +1,5 @@
 {
-	"name": "buffetbotjsapi",
+	"name": "musicchartapi",
 	"version": "1.0.0",
 	"private": false,
 	"main": "./dist/musicChartApi/main.js",
@@ -12,7 +12,7 @@
 	"type": "module",
 	"scripts": {
 		"serve": "pnpm compile && pnpm execute",
-		"compile": "pnpm tsc --build",
+		"compile": "pnpm tsc",
 		"execute": "node ./dist/musicChartApi/main.js"
 	},
 	"dependencies": {
