@@ -5,7 +5,7 @@ import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
 import { google, type sheets_v4 } from 'googleapis'
 import { authorize } from '../shared/googleApis.js'
-import { Release } from '../shared/typings.js'
+import { Release } from '../types/typings.js'
 
 // TODO: breakup this massive file.
 
@@ -253,6 +253,7 @@ function setupIntervals() {
 
 // TODO: do caching on the API layer
 async function getArray(params: SpreadsheetParams): Promise<string[][]> {
+	// TODO: looks like fetch global .d.ts isnt loading
 	return (
 		await fetch(
 			`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
