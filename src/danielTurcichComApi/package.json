@@ -11,8 +11,9 @@
 	},
 	"type": "module",
 	"scripts": {
-		"serve": "pnpm compile && pnpm execute",
-		"compile": "pnpm tsc --build",
+		"serve": "pnpm recompile && pnpm execute",
+		"compile": "pnpm tsc",
+		"recompile": "pnpm tsc --build",
 		"execute": "node ./dist/src/danielTurcichComApi/main.js"
 	},
 	"dependencies": {

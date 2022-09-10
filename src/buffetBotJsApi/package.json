@@ -2,7 +2,6 @@
 	"name": "buffetbotjsapi",
 	"version": "1.0.0",
 	"private": false,
-	"license": "Unlicense",
 	"main": "./dist/src/buffetBotJsApi/main.js",
 	"description": "API for my Node based Discord Bot",
 	"author": {
@@ -12,8 +11,9 @@
 	},
 	"type": "module",
 	"scripts": {
-		"serve": "pnpm compile && pnpm execute",
-		"compile": "pnpm tsc --build",
+		"serve": "pnpm recompile && pnpm execute",
+		"compile": "pnpm tsc",
+		"recompile": "pnpm tsc --build",
 		"execute": "node ./dist/src/buffetBotJsApi/main.js"
 	},
 	"dependencies": {
