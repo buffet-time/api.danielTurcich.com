@@ -1,47 +1,41 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { google, Auth } from 'googleapis'
-import { authorize } from '../shared/googleApis.js'
-import { redditCredentials } from './credentials/credentials.js'
+import { authorize } from '../shared/googleApis'
+import { redditCredentials } from './credentials/credentials'
 import Fastify from 'fastify'
 import snoowrap from 'snoowrap'
 
 const reddit = new snoowrap(redditCredentials)
 const fastify = Fastify()
 const port = 1080
+
 let gmailAuthClient: Auth.OAuth2Client
 
-fastify.get(
-	'/Email',
-	async (request: any, reply: { send: (arg0: string) => void }) => {
-		try {
-			const to = request.query.to as string
-			const subject = request.query.subject as string
-			const message = request.query.message as string
+fastify.get('/Email', async (request: any, reply: any) => {
+	try {
+		const to = request.query.to as string
+		const subject = request.query.subject as string
+		const message = request.query.message as string
 
-			reply.send(sendEmail(to, subject, message))
-		} catch (error) {
-			console.log(`Error in /Email request:\n ${error}`)
-		}
+		reply.send(sendEmail(to, subject, message))
+	} catch (error) {
+		console.log(`Error in /Email request:\n ${error}`)
 	}
-)
+})
 
-fastify.get(
-	'/Reddit/Top/Femboy',
-	async (_request: any, reply: { send: (arg0: { url: any }) => void }) => {
-		try {
-			const redditResponse = await reddit
-				.getSubreddit('femboy')
-				.getHot({ limit: 1 })
-			// pinned messages have stickied set to true
-			const topPost = redditResponse.filter(
-				(post: { stickied: boolean }) => post.stickied === false
-			)
-			reply.send({ url: topPost[0].url })
-		} catch (error) {
-			console.log(`Error in /Reddit/Top/Femboy request:\n ${error}`)
-		}
+fastify.get('/Reddit/Top/Femboy', async (_request: any, reply: any) => {
+	try {
+		const redditResponse = await reddit
+			.getSubreddit('femboy')
+			.getHot({ limit: 1 })
+		// pinned messages have stickied set to true
+		const topPost = redditResponse.filter(
+			(post: { stickied: boolean }) => post.stickied === false
+		)
+		reply.send({ url: topPost[0].url })
+	} catch (error) {
+		console.log(`Error in /Reddit/Top/Femboy request:\n ${error}`)
 	}
-)
+})
 
 // Run the server!
 async function start() {
@@ -61,6 +55,7 @@ async function start() {
 					tokenPath: gmailTokenPath
 				})
 			} catch (error) {
+				console.log('Error in onstart', error)
 				throw new Error('No emailCredentials.json, check readme.md')
 			}
 			console.log(`Listening on port: ${port}`)
@@ -68,6 +63,7 @@ async function start() {
 
 		onStart()
 	} catch (err) {
+		console.log('Error in start()', err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
@@ -85,6 +81,7 @@ function sendEmail(to: string, subject: string, message: string) {
 		})
 		return 'good'
 	} catch (error) {
+		console.log('Error in sendEmail()', error)
 		return 'error'
 	}
 }

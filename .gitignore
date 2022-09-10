@@ -1,12 +1,14 @@
 # folders to ignore
-dist
 node_modules
 credentials
+
+# Parcel
+.parcel-cache
+dist
 
 # pnpm
 .pnpm-debug.log
 
 # other
-ignoreThis.txt
 ignore.json
 googleCreds.json

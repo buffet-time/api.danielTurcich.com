@@ -3,9 +3,10 @@
 import path from 'path'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
-import { google, type sheets_v4 } from 'googleapis'
-import { authorize } from '../shared/googleApis.js'
-import { Release } from '../shared/typings.js'
+import { google, sheets_v4 } from 'googleapis'
+import { authorize } from '../shared/googleApis'
+import { Release } from '../types/typings'
+import { ProperFetch } from '../shared/shared'
 
 // TODO: breakup this massive file.
 
@@ -251,13 +252,11 @@ function setupIntervals() {
 	}, 1_800_000) // 30 minutes
 }
 
-// TODO: do caching on the API layer
+// TODO: decouple this from referencing itself
 async function getArray(params: SpreadsheetParams): Promise<string[][]> {
-	return (
-		await fetch(
-			`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
-		)
-	).json() as unknown as string[][]
+	return ProperFetch(
+		`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
+	) as unknown as string[][]
 }
 
 async function getRows(
@@ -304,8 +303,6 @@ async function getNumberOfRows(
 						// TODO: ENHANCE THIS TO ALLOW THE BOT TO USE THINGS BESIDES MUSIC HERE
 						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
 							resolve(n + 1)
-						} else {
-							console.log('Res or Res Values was undefined in getNumberOfRows.')
 						}
 					}
 				}
