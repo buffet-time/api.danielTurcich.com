@@ -1,7 +1,10 @@
 # folders to ignore
-dist
 node_modules
 credentials
+
+# Parcel
+.parcel-cache
+dist
 
 # pnpm
 .pnpm-debug.log

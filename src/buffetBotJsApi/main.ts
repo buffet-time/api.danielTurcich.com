@@ -1,6 +1,6 @@
 import { google, Auth } from 'googleapis'
-import { authorize } from '../shared/googleApis.js'
-import { redditCredentials } from './credentials/credentials.js'
+import { authorize } from '../shared/googleApis'
+import { redditCredentials } from './credentials/credentials'
 import Fastify from 'fastify'
 import snoowrap from 'snoowrap'
 

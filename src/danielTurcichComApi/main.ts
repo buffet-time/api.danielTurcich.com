@@ -4,9 +4,9 @@ import path from 'path'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
 import { google, sheets_v4 } from 'googleapis'
-import { authorize } from '../shared/googleApis.js'
-import { Release } from '../types/typings.js'
-import { ProperFetch } from '../shared/shared.js'
+import { authorize } from '../shared/googleApis'
+import { Release } from '../types/typings'
+import { ProperFetch } from '../shared/shared'
 
 // TODO: breakup this massive file.
 

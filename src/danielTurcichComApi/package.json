@@ -2,7 +2,8 @@
 	"name": "danielturichdotcomapi",
 	"version": "1.0.0",
 	"private": false,
-	"main": "./dist/src/danielTurcichComApi/main.js",
+	"source": "main.ts",
+	"main": "./dist/main.js",
 	"description": "API portion of my website",
 	"author": {
 		"email": "packagejson@danielTurcich.com",
@@ -11,10 +12,9 @@
 	},
 	"type": "module",
 	"scripts": {
-		"serve": "pnpm recompile && pnpm execute",
-		"compile": "pnpm tsc",
-		"recompile": "pnpm tsc --build",
-		"execute": "node ./dist/src/danielTurcichComApi/main.js"
+		"serve": "pnpm build && pnpm execute",
+		"build": "parcel build",
+		"execute": "node ./dist/main.js"
 	},
 	"dependencies": {
 		"@fastify/cors": "^8.1.0",

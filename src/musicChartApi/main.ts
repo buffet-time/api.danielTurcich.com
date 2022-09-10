@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { lastFmApiKey } from './credentials/apiKey.js'
+import { lastFmApiKey } from './credentials/apiKey'
 import { AlbumReturn, AlbumResults } from '../types/typings'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
-import { ProperFetch } from '../shared/shared.js'
+import { ProperFetch } from '../shared/shared'
 
 const fastify = Fastify()
 const port = 3030 //deltron
