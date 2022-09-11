@@ -2,8 +2,6 @@
 	"name": "danielturichdotcomapi",
 	"version": "1.0.0",
 	"private": false,
-	"source": "main.ts",
-	"main": "./dist/main.js",
 	"description": "API portion of my website",
 	"author": {
 		"email": "packagejson@danielTurcich.com",
@@ -14,7 +12,7 @@
 	"scripts": {
 		"serve": "pnpm build && pnpm execute",
 		"build": "parcel build",
-		"execute": "node ./dist/main.js"
+		"execute": "node ./dist/index.js"
 	},
 	"dependencies": {
 		"@fastify/cors": "^8.1.0",
@@ -25,5 +23,14 @@
 	"devDependencies": {
 		"@types/node": "^18.7.2",
 		"typescript": "^4.8.2"
+	},
+	"source": "main.ts",
+	"module": "./dist/index.js",
+	"targets": {
+		"module": {
+			"context": "node",
+			"isLibrary": false,
+			"sourceMap": false
+		}
 	}
 }
