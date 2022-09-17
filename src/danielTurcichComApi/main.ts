@@ -5,65 +5,23 @@ import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from '../shared/googleApis'
-import { Release } from '../types/typings'
-import { ProperFetch } from '../shared/shared'
+import { Release, ReleasesIn, type StatsObject } from '../types/typings'
+import {
+	getArray,
+	getNumberOfRows,
+	getRows,
+	isNum,
+	spreadsheets
+} from './supplemental'
 
-// TODO: breakup this massive file.
-
-// TYPES
-interface SpreadsheetParams {
-	id: string
-	range: string
-}
-
-interface StatsObject {
-	numberOfReleases: string | number
-	averageYear: string | number
-	averageScore: string | number
-	numberOfArtists: string | number
-	releasesPerYear: number[]
-	currentYear: number
-	earliestYear: number
-}
-
-enum ReleasesIn {
-	'1950s',
-	'1960s',
-	'1970s',
-	'1980s',
-	'1990s',
-	'2000s',
-	'2010s',
-	'2020s'
-}
+export let sheets: sheets_v4.Sheets
 
 // FAstify/ etc setup
 const fastify = Fastify()
 const port = 2080
-let sheets: sheets_v4.Sheets
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// @ts-expect-error
 fastify.register(FastifyCors)
-
-// standard variables
-const spreadsheets: SpreadsheetParams[] = [
-	{
-		id: '1tn0BmleHcs0okzWKhUnyOCWUPD422HvutpNQNzdAAIk',
-		range: 'Main!A2:F' // before
-	},
-	{
-		id: '1dmETb3Ybqs8Dhez_kP2DHiXR_Gqw-X56qsXDHYyTH1w',
-		range: 'Main!A2:F' // 2020
-	},
-	{
-		id: '18V5oypFBW3Bu_tHxfTL-iSbb9ALYrCJlMwLhpPmp72M',
-		range: 'Main!A2:G' // 2021
-	},
-	{
-		id: '1lyFD7uLMT0mRdGkKwvbIm_2pqk2YJU7rtRQVhHq-nwU',
-		range: 'Main!A2:G' // 2022
-	}
-]
 
 let releasesArray: string[][]
 let statsObject: StatsObject
@@ -198,11 +156,6 @@ async function initializeSheets() {
 		releasePerYear.push(0)
 	}
 
-	// for readability
-	function isNum(value: string) {
-		return !isNaN(Number(value))
-	}
-
 	releasesArray.forEach((current) => {
 		if (!artistArray.includes(current[Release.artist])) {
 			artistArray.push(current[Release.artist])
@@ -250,86 +203,4 @@ function setupIntervals() {
 			initializeSheets()
 		}
 	}, 1_800_000) // 30 minutes
-}
-
-// TODO: decouple this from referencing itself
-async function getArray(params: SpreadsheetParams): Promise<string[][]> {
-	return ProperFetch(
-		`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
-	) as unknown as string[][]
-}
-
-async function getRows(
-	spreadsheetId: string,
-	range: string,
-	index?: number
-): Promise<string[][]> {
-	// TODO refactor to async await
-	return new Promise((resolve) =>
-		sheets.spreadsheets.values.get(
-			{
-				spreadsheetId: spreadsheetId,
-				range: range
-			},
-			(error: any, response: any) => {
-				if (error || !response?.data.values) {
-					console.log(`Error in getRows():\n ${error}`)
-					resolve([])
-				} else {
-					!isNaN(index!)
-						? resolve(response.data.values[index!])
-						: resolve(response.data.values)
-				}
-			}
-		)
-	)
-}
-
-async function getNumberOfRows(
-	spreadsheetId: string,
-	range: string,
-	nonMusic?: boolean
-): Promise<number> {
-	// TODO refactor to async await
-	return new Promise((resolve) =>
-		sheets.spreadsheets.values.get(
-			{
-				spreadsheetId: spreadsheetId,
-				range: range
-			},
-			(_err: any, res: any) => {
-				if (res && res.data.values) {
-					for (let n = res.data.values.length - 1; n > 0; n--) {
-						// TODO: ENHANCE THIS TO ALLOW THE BOT TO USE THINGS BESIDES MUSIC HERE
-						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
-							resolve(n + 1)
-						}
-					}
-				}
-			}
-		)
-	)
-}
-
-function rowIsFilledOut(row: string[], nonMusic?: boolean): boolean {
-	if (nonMusic) {
-		if (row && row[0] && row[1] && row[2] && row[3] && row[4]) {
-			return true
-		}
-		return false
-	}
-
-	if (
-		row &&
-		row[Release.score] &&
-		row[Release.comments] &&
-		row[Release.artist] &&
-		row[Release.name] &&
-		row[Release.type] &&
-		row[Release.year] &&
-		row[Release.genre]
-	) {
-		return true
-	}
-	return false
 }

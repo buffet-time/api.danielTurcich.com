@@ -79,3 +79,29 @@ interface Album {
 	streamable: string
 	mbid: string
 }
+
+export interface SpreadsheetParams {
+	id: string
+	range: string
+}
+
+export interface StatsObject {
+	numberOfReleases: string | number
+	averageYear: string | number
+	averageScore: string | number
+	numberOfArtists: string | number
+	releasesPerYear: number[]
+	currentYear: number
+	earliestYear: number
+}
+
+export enum ReleasesIn {
+	'1950s',
+	'1960s',
+	'1970s',
+	'1980s',
+	'1990s',
+	'2000s',
+	'2010s',
+	'2020s'
+}

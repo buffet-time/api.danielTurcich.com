@@ -1,16 +1,24 @@
 {
-	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
 	"eslint.validate": ["javascript"],
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
+	"files.eol": "\n",
 	"search.exclude": {
-		"**/.firebase": true,
-		"**/.github": true,
+		"pnpm-lock.yaml": true,
+		"pnpm-workspace.yaml": true,
+		"deployment.txt": true,
+		"LICENSE": true,
+		"README.md": true,
+		"./.vscode": true,
+		"./.parcel-cache": true,
+		"**/ignore.*": true,
 		"**/dist": true,
 		"**/node_modules": true,
-		"**acronymWords.json": true,
-		".eslintcache": true
+		"**/credentials": true
 	}
 }
