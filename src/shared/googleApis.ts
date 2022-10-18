@@ -1,7 +1,8 @@
-import fs from 'fs/promises'
+import filesystem from 'fs/promises'
 import path from 'path'
 import { authenticate } from '@google-cloud/local-auth'
-import { google, Auth } from 'googleapis'
+import { google } from 'googleapis'
+import type { OAuth2Client } from 'googleapis-common'
 
 // If modifying these scopes, delete token.json.
 // const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -15,7 +16,7 @@ export async function authorize({
 	scopes: string[]
 	tokenPath: string
 }) {
-	let client = (await loadSavedCredentialsIfExist()) as Auth.OAuth2Client | null
+	let client = (await loadSavedCredentialsIfExist()) as OAuth2Client | null
 
 	if (client) {
 		return client
@@ -35,7 +36,7 @@ export async function authorize({
 	// Reads previously authorized credentials from the save file.
 	async function loadSavedCredentialsIfExist() {
 		try {
-			const content = await fs.readFile(tokenPath)
+			const content = await filesystem.readFile(tokenPath)
 			const credentials = JSON.parse(content.toString())
 
 			return google.auth.fromJSON(credentials)
@@ -46,7 +47,7 @@ export async function authorize({
 
 	// Serializes credentials to a file comptible with GoogleAUth.fromJSON.
 	async function saveCredentials() {
-		const content = await fs.readFile(credentialsPath)
+		const content = await filesystem.readFile(credentialsPath)
 		const keys = JSON.parse(content.toString())
 		const key = keys.installed || keys.web
 
@@ -57,6 +58,6 @@ export async function authorize({
 			refresh_token: client?.credentials.refresh_token
 		})
 
-		await fs.writeFile(tokenPath, payload)
+		await filesystem.writeFile(tokenPath, payload)
 	}
 }

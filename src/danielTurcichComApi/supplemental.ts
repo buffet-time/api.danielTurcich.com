@@ -50,11 +50,11 @@ export async function getRows(
 				if (error || !response?.data.values) {
 					console.log(`Error in getRows():\n ${error}`)
 					resolve([])
-				} else {
-					!isNaN(index!)
-						? resolve(response.data.values[index!])
-						: resolve(response.data.values)
 				}
+
+				!isNaN(index!)
+					? resolve(response.data.values[index!])
+					: resolve(response.data.values)
 			}
 		)
 	)

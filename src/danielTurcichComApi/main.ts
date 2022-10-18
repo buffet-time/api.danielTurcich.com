@@ -19,8 +19,6 @@ export let sheets: sheets_v4.Sheets
 // FAstify/ etc setup
 const fastify = Fastify()
 const port = 2080
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 fastify.register(FastifyCors)
 
 let releasesArray: string[][]
@@ -40,14 +38,13 @@ fastify.get('/Sheets', async (request: any, reply) => {
 		if (rows === 'true') {
 			if (nonMusic === 'true') {
 				returnValue = await getNumberOfRows(id, range, true)
-			} else {
-				returnValue = await getNumberOfRows(id, range)
 			}
+			returnValue = await getNumberOfRows(id, range)
 		} else if (index === 0 || index) {
 			returnValue = await getRows(id, range, index)
-		} else {
-			returnValue = await getRows(id, range)
 		}
+
+		returnValue = await getRows(id, range)
 
 		reply.send(returnValue)
 	} catch (error) {

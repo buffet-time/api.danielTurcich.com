@@ -1,4 +1,5 @@
-import { google, Auth } from 'googleapis'
+import { google } from 'googleapis'
+import type { OAuth2Client } from 'googleapis-common'
 import { authorize } from '../shared/googleApis'
 import { redditCredentials } from './credentials/credentials'
 import Fastify from 'fastify'
@@ -8,7 +9,7 @@ const reddit = new snoowrap(redditCredentials)
 const fastify = Fastify()
 const port = 1080
 
-let gmailAuthClient: Auth.OAuth2Client
+let gmailAuthClient: OAuth2Client
 
 fastify.get('/Email', async (request: any, reply: any) => {
 	try {
@@ -72,7 +73,9 @@ start()
 
 function sendEmail(to: string, subject: string, message: string) {
 	try {
-		google.gmail({ version: 'v1', auth: gmailAuthClient }).users.messages.send({
+		const gmail = google.gmail({ version: 'v1', auth: gmailAuthClient })
+
+		gmail.users.messages.send({
 			auth: gmailAuthClient,
 			userId: 'buffetsbot@gmail.com',
 			requestBody: {

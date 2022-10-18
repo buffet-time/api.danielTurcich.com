@@ -16,10 +16,10 @@ export async function ProperFetch(
 
 		if (response.ok) {
 			return await response.json()
-		} else {
-			console.error('Responded with an error:' + (await response.json()))
-			return null
 		}
+
+		console.error('Responded with an error:' + (await response.json()))
+		return null
 	} catch (error) {
 		console.error(`Error in fetch call: ${error}`)
 		return null

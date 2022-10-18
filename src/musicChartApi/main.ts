@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { lastFmApiKey } from './credentials/apiKey'
-import { AlbumReturn, AlbumResults } from '../types/typings'
+import type { AlbumReturn, AlbumResults } from '../types/typings'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
 import { ProperFetch } from '../shared/shared'
@@ -10,7 +10,6 @@ const port = 3030 //deltron
 const apiBaseUrl =
 	'https://ws.audioscrobbler.com/2.0/?method=album.search&album='
 
-// @ts-expect-error
 fastify.register(FastifyCors)
 
 fastify.get('/Search', async (request: any, reply: any) => {
