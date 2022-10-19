@@ -34,13 +34,16 @@ fastify.get('/Sheets', async (request: any, reply) => {
 		const nonMusic: string | undefined = request.query.nonmusic
 
 		switch (true) {
-			case rows === 'true' && nonMusic === 'true':
+			// prettier-ignore
+			case (rows === 'true' && nonMusic === 'true'):
 				reply.send(await getNumberOfRows(id, range, true))
 				break
-			case rows === 'true':
+			// prettier-ignore
+			case (rows === 'true'):
 				reply.send(await getNumberOfRows(id, range))
 				break
-			case index >= 0:
+			// prettier-ignore
+			case (index >= 0):
 				reply.send(await getRows(id, range, index))
 				break
 			default:
