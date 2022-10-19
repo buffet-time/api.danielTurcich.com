@@ -36,15 +36,19 @@ fastify.get('/Sheets', async (request: any, reply) => {
 
 		switch (true) {
 			case rows === 'true' && nonMusic === 'true':
+				console.log(1)
 				reply.send(await getNumberOfRows(id, range, true))
 				break
 			case rows === 'true':
+				console.log(2)
 				reply.send(await getNumberOfRows(id, range))
 				break
 			case index === 0 || index:
+				console.log(3)
 				reply.send(await getRows(id, range, index))
 				break
 			default:
+				console.log(4)
 				reply.send(await getRows(id, range))
 				break
 		}
