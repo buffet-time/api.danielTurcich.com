@@ -28,11 +28,11 @@ let cachedCurrentYear: string[][]
 // Declare a route
 fastify.get('/Sheets', async (request: any, reply) => {
 	try {
-		const id = request.query.id as string
-		const range = request.query.range as string
-		const index = Number(request.query.index as string)
-		const rows = request.query.rows as string
-		const nonMusic = request.query.nonmusic as string
+		const id: string = request.query.id
+		const range: string = request.query.range
+		const index: number | undefined = Number(request.query.index as string)
+		const rows: string | undefined = request.query.rows
+		const nonMusic: string | undefined = request.query.nonmusic
 		let returnValue
 
 		console.log(id, range, index, rows, nonMusic)
@@ -52,7 +52,6 @@ fastify.get('/Sheets', async (request: any, reply) => {
 	} catch (error) {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
-	// })
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
