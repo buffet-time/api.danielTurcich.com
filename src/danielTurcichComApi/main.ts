@@ -63,9 +63,9 @@ fastify.get('/Sheets', async (request: any, reply) => {
 
 		console.log(5, index, rows, nonMusic)
 
-		console.log(10, rows === 'true' && nonMusic === 'true')
-		console.log(11, rows === 'true')
-		console.log(12, index === 0 || index)
+		// console.log(10, rows === 'true' && nonMusic === 'true')
+		// console.log(11, rows === 'true')
+		// console.log(12, index >= 0)
 		switch (true) {
 			// prettier-ignore
 			case (rows === 'true' && nonMusic === 'true'):
@@ -78,7 +78,7 @@ fastify.get('/Sheets', async (request: any, reply) => {
 				reply.send(await getNumberOfRows(id, range))
 				break
 			// prettier-ignore
-			case (index === 0 || index):
+			case (index >= 0):
 				console.log(3)
 				reply.send(await getRows(id, range, index))
 				break
