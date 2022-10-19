@@ -35,6 +35,8 @@ fastify.get('/Sheets', async (request: any, reply) => {
 		const nonMusic = request.query.nonmusic as string
 		let returnValue
 
+		console.log(id, range, index, rows, nonMusic)
+
 		if (rows === 'true') {
 			if (nonMusic === 'true') {
 				returnValue = await getNumberOfRows(id, range, true)
