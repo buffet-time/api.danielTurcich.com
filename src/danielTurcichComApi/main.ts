@@ -63,6 +63,9 @@ fastify.get('/Sheets', async (request: any, reply) => {
 
 		console.log(5, index, rows, nonMusic)
 
+		console.log(10, rows === 'true' && nonMusic === 'true')
+		console.log(11, rows === 'true')
+		console.log(12, index === 0 || index)
 		switch (true) {
 			// prettier-ignore
 			case (rows === 'true' && nonMusic === 'true'):
