@@ -33,28 +33,21 @@ fastify.get('/Sheets', async (request: any, reply) => {
 		const index: number | undefined = Number(request.query.index as string)
 		const rows: string | undefined = request.query.rows
 		const nonMusic: string | undefined = request.query.nonmusic
-		let returnValue
 
-		console.log(0, id, range, index, rows, nonMusic)
-
-		if (rows === 'true') {
-			if (nonMusic === 'true') {
-				console.log(1)
-				returnValue = await getNumberOfRows(id, range, true)
-			} else {
-				console.log(2)
-				returnValue = await getNumberOfRows(id, range)
-			}
-		} else if (index === 0 || index) {
-			console.log(3)
-			returnValue = await getRows(id, range, index)
-		} else {
-			console.log(4)
-			returnValue = await getRows(id, range)
+		switch (true) {
+			case rows === 'true' && nonMusic === 'true':
+				reply.send(await getNumberOfRows(id, range, true))
+				break
+			case rows === 'true':
+				reply.send(await getNumberOfRows(id, range))
+				break
+			case index === 0 || index:
+				reply.send(await getRows(id, range, index))
+				break
+			default:
+				reply.send(await getRows(id, range))
+				break
 		}
-
-		console.log(5, returnValue)
-		reply.send(returnValue)
 	} catch (error) {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
