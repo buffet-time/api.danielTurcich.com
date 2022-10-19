@@ -25,32 +25,31 @@ let releasesArray: string[][]
 let statsObject: StatsObject
 let cachedCurrentYear: string[][]
 
-// Declare a route
 fastify.get('/Sheets', async (request: any, reply) => {
 	try {
-		const id = request.query.id as string
-		const range = request.query.range as string
-		const index = Number(request.query.index as string)
-		const rows = request.query.rows as string
-		const nonMusic = request.query.nonmusic as string
-		let returnValue
+		const id: string = request.query.id
+		const range: string = request.query.range
+		const index: number | undefined = Number(request.query.index)
+		const rows: string | undefined = request.query.rows
+		const nonMusic: string | undefined = request.query.nonmusic
 
-		if (rows === 'true') {
-			if (nonMusic === 'true') {
-				returnValue = await getNumberOfRows(id, range, true)
-			}
-			returnValue = await getNumberOfRows(id, range)
-		} else if (index === 0 || index) {
-			returnValue = await getRows(id, range, index)
+		switch (true) {
+			case rows === 'true' && nonMusic === 'true':
+				reply.send(await getNumberOfRows(id, range, true))
+				break
+			case rows === 'true':
+				reply.send(await getNumberOfRows(id, range))
+				break
+			case index >= 0:
+				reply.send(await getRows(id, range, index))
+				break
+			default:
+				reply.send(await getRows(id, range))
+				break
 		}
-
-		returnValue = await getRows(id, range)
-
-		reply.send(returnValue)
 	} catch (error) {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
-	// })
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
