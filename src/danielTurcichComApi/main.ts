@@ -25,34 +25,6 @@ let releasesArray: string[][]
 let statsObject: StatsObject
 let cachedCurrentYear: string[][]
 
-// fastify.get('/Sheets', async (request: any, reply) => {
-// 	try {
-// 		const id = request.query.id as string
-// 		const range = request.query.range as string
-// 		const index = Number(request.query.index as string)
-// 		const rows = request.query.rows as string
-// 		const nonMusic = request.query.nonmusic as string
-// 		let returnValue
-
-// 		if (rows === 'true') {
-// 			if (nonMusic === 'true') {
-// 				returnValue = await getNumberOfRows(id, range, true)
-// 			}
-// 			returnValue = await getNumberOfRows(id, range)
-// 		} else if (index === 0 || index) {
-// 			returnValue = await getRows(id, range, index)
-// 		}
-
-// 		returnValue = await getRows(id, range)
-
-// 		reply.send(returnValue)
-// 	} catch (error) {
-// 		console.log(`Error in /Sheets request:\n ${error}`)
-// 	}
-// 	// })
-// })
-
-// Declare a route
 fastify.get('/Sheets', async (request: any, reply) => {
 	try {
 		const id: string = request.query.id
@@ -61,29 +33,17 @@ fastify.get('/Sheets', async (request: any, reply) => {
 		const rows: string | undefined = request.query.rows
 		const nonMusic: string | undefined = request.query.nonmusic
 
-		console.log(5, index, rows, nonMusic)
-
-		// console.log(10, rows === 'true' && nonMusic === 'true')
-		// console.log(11, rows === 'true')
-		// console.log(12, index >= 0)
 		switch (true) {
-			// prettier-ignore
-			case (rows === 'true' && nonMusic === 'true'):
-				console.log(1)
+			case rows === 'true' && nonMusic === 'true':
 				reply.send(await getNumberOfRows(id, range, true))
 				break
-			// prettier-ignore
-			case (rows === 'true'):
-				console.log(2)
+			case rows === 'true':
 				reply.send(await getNumberOfRows(id, range))
 				break
-			// prettier-ignore
-			case (index >= 0):
-				console.log(3)
+			case index >= 0:
 				reply.send(await getRows(id, range, index))
 				break
 			default:
-				console.log(4)
 				reply.send(await getRows(id, range))
 				break
 		}
