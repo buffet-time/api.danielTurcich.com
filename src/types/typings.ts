@@ -105,3 +105,33 @@ export enum ReleasesIn {
 	'2010s',
 	'2020s'
 }
+
+interface TopAlbumsArrayImageObject {
+	size: string
+	'#text': ''
+}
+
+interface TopAlbumsArrayObject {
+	artist: {
+		url: string
+		name: string
+		mbid: string
+	}
+	image: TopAlbumsArrayImageObject[]
+	mbid: string
+	url: string
+	playcount: string
+	'@attr': { rank: string }
+	name: string
+}
+
+export interface TopAlbumsResult {
+	album: TopAlbumsArrayObject[]
+	'@attr': {
+		user: string
+		totalPages: string
+		page: string
+		perPage: string
+		total: string
+	}
+}
