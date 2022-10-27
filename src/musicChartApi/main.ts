@@ -36,9 +36,11 @@ fastify.get('/Search', async (request: any, reply: any) => {
 		}
 
 		const apiUrl = `${searchBaseUrl}${request.query.album}&api_key=${lastFmApiKey}&limit=${requestLimit}&format=json`
-		// console.log(1, apiUrl)
+		console.log(10, apiUrl)
 
 		const results: AlbumResults = await ProperFetch(apiUrl)
+
+		console.log(11, results)
 
 		const massagedResponse: AlbumReturn[] = []
 
@@ -83,9 +85,11 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 		const requestPeriod = request.query.period ? request.query.period : '1month'
 
 		const apiUrl = `${topAlbumBaseUrl}${request.query.user}&api_key=${lastFmApiKey}&period=${requestPeriod}&limit=${requestLimit}&format=json`
-		// console.log(1, apiUrl)
+		console.log(1, apiUrl)
 
 		const results: TopAlbumsResult = await ProperFetch(apiUrl)
+
+		console.log(2, results)
 
 		// const massagedResponse: AlbumReturn[] = []
 
