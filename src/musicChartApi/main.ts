@@ -89,25 +89,31 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 
 		// const massagedResponse: AlbumReturn[] = []
 
-		reply.send(
-			results.album.map(async (album) => {
-				const albumSearch: AlbumReturn[] = await ProperFetch(
-					`http://localhost:${[port]}/Search?album=${encodeURIComponent(
-						album.artist.name
-					)}`
-				)
+		const returnArray: AlbumReturn[] = []
 
-				if (albumSearch.length > 0) {
-					return albumSearch[0]
-				}
+		for (const album of results.album) {
+			console.log(album)
+			const albumSearch: AlbumReturn[] = await ProperFetch(
+				`http://localhost:${[port]}/Search?album=${encodeURIComponent(
+					album.artist.name
+				)}`
+			)
 
-				return {
-					image: grayImageUrl,
-					artist: 'Placeholder',
-					name: 'Placeholder'
-				}
+			if (albumSearch.length > 0) {
+				returnArray.push(albumSearch[0])
+				continue
+			}
+
+			returnArray.push({
+				image: grayImageUrl,
+				artist: 'Placeholder',
+				name: 'Placeholder'
 			})
-		)
+		}
+
+		console.log(returnArray)
+
+		reply.send(returnArray)
 	} catch (error) {
 		console.log(`Error in /Search request:\n ${error}`)
 	}
