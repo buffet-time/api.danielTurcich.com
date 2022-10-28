@@ -91,26 +91,46 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 			)
 		)
 
-		Promise.all(blah).then((values: AlbumReturn[][]) => {
-			const returnArray: AlbumReturn[] = []
+		// await Promise.all(blah).then((values: AlbumReturn[][]) => {
+		// 	const returnArray: AlbumReturn[] = []
 
-			// console.log(1, values)
+		// 	// console.log(1, values)
 
-			values.forEach((album) => {
-				if (album.length > 0) {
-					returnArray.push(album[0])
-				} else {
-					returnArray.push({
-						image: grayImageUrl,
-						artist: 'Placeholder',
-						name: 'Placeholder'
-					})
-				}
-			})
+		// 	values.forEach((album) => {
+		// 		if (album.length > 0) {
+		// 			returnArray.push(album[0])
+		// 		} else {
+		// 			returnArray.push({
+		// 				image: grayImageUrl,
+		// 				artist: 'Placeholder',
+		// 				name: 'Placeholder'
+		// 			})
+		// 		}
+		// 	})
 
-			console.log(2, returnArray)
-			reply.send(returnArray)
+		// 	console.log(2, returnArray)
+		// 	reply.send(returnArray)
+		// })
+
+		const values = await Promise.all(blah)
+		const returnArray: AlbumReturn[] = []
+
+		// console.log(1, values)
+
+		values.forEach((album) => {
+			if (album.length > 0) {
+				returnArray.push(album[0])
+			} else {
+				returnArray.push({
+					image: grayImageUrl,
+					artist: 'Placeholder',
+					name: 'Placeholder'
+				})
+			}
 		})
+
+		console.log(2, returnArray)
+		reply.send(returnArray)
 	} catch (error) {
 		console.log(`Error in /Search request:\n ${error}`)
 	}
