@@ -126,12 +126,14 @@ interface TopAlbumsArrayObject {
 }
 
 export interface TopAlbumsResult {
-	album: TopAlbumsArrayObject[]
-	'@attr': {
-		user: string
-		totalPages: string
-		page: string
-		perPage: string
-		total: string
+	topAlbums: {
+		album: TopAlbumsArrayObject[]
+		'@attr': {
+			user: string
+			totalPages: string
+			page: string
+			perPage: string
+			total: string
+		}
 	}
 }
