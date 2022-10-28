@@ -126,7 +126,7 @@ interface TopAlbumsArrayObject {
 }
 
 export interface TopAlbumsResult {
-	topAlbums: {
+	topalbums: {
 		album: TopAlbumsArrayObject[]
 		'@attr': {
 			user: string

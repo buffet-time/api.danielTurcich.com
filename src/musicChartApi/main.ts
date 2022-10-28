@@ -99,7 +99,7 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 
 		const returnArray: AlbumReturn[] = []
 
-		for (const album of results.topAlbums.album) {
+		for (const album of results.topalbums.album) {
 			console.log(album)
 			const albumSearch: AlbumReturn[] = await ProperFetch(
 				`http://localhost:${[port]}/Search?album=${encodeURIComponent(
