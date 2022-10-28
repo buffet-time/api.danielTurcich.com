@@ -94,7 +94,7 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 		Promise.all(blah).then((values: AlbumReturn[][]) => {
 			const returnArray: AlbumReturn[] = []
 
-			console.log(1, values)
+			// console.log(1, values)
 
 			values.forEach((album) => {
 				if (album.length > 0) {
@@ -108,8 +108,8 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 				}
 			})
 
-			console.log(2, returnArray)
-			reply.send(1, returnArray)
+			// console.log(2, returnArray)
+			reply.send(returnArray)
 		})
 	} catch (error) {
 		console.log(`Error in /Search request:\n ${error}`)
