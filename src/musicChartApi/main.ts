@@ -83,27 +83,6 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 		const apiUrl = `${topAlbumBaseUrl}${request.query.user}&api_key=${lastFmApiKey}&period=${requestPeriod}&limit=${requestLimit}&format=json`
 		const results: TopAlbumsResult = await ProperFetch(apiUrl)
 
-		// for (const album of results.topalbums.album) {
-		// 	const albumSearch: AlbumReturn[] = await ProperFetch(
-		// 		`http://localhost:${[port]}/Search?album=${encodeURIComponent(
-		// 			album.artist.name
-		// 		)}`
-		// 	)
-
-		// 	if (albumSearch.length > 0) {
-		// 		returnArray.push(albumSearch[0])
-		// 		continue
-		// 	}
-
-		// 	returnArray.push({
-		// 		image: grayImageUrl,
-		// 		artist: 'Placeholder',
-		// 		name: 'Placeholder'
-		// 	})
-		// }
-
-		console.log(1, results)
-
 		const blah = results.topalbums.album.map((album) =>
 			ProperFetch(
 				`http://localhost:${[port]}/Search?album=${encodeURIComponent(
@@ -112,26 +91,23 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 			)
 		)
 
-		console.log(2, blah)
-
-		const returnArray: AlbumReturn[] = []
 		Promise.all(blah).then((values: AlbumReturn[][]) => {
-			console.log(3, values)
-			for (const album of values) {
+			const returnArray: AlbumReturn[] = []
+
+			values.forEach((album) => {
 				if (album.length > 0) {
 					returnArray.push(album[0])
-					continue
+				} else {
+					returnArray.push({
+						image: grayImageUrl,
+						artist: 'Placeholder',
+						name: 'Placeholder'
+					})
 				}
+			})
 
-				returnArray.push({
-					image: grayImageUrl,
-					artist: 'Placeholder',
-					name: 'Placeholder'
-				})
-			}
+			reply.send(1, returnArray)
 		})
-
-		reply.send(returnArray)
 	} catch (error) {
 		console.log(`Error in /Search request:\n ${error}`)
 	}

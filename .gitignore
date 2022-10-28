@@ -10,5 +10,5 @@ dist
 .pnpm-debug.log
 
 # other
-ignore.json
+ignore.*
 googleCreds.json
