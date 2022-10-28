@@ -108,7 +108,7 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 				}
 			})
 
-			// console.log(2, returnArray)
+			console.log(2, returnArray)
 			reply.send(returnArray)
 		})
 	} catch (error) {
