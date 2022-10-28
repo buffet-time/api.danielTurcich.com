@@ -82,7 +82,11 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 			requestLimit = request.query.limit
 		}
 
+		console.log('-1', requestLimit)
+
 		const requestPeriod = request.query.period ? request.query.period : '1month'
+
+		console.log(0, request.query.user)
 
 		const apiUrl = `${topAlbumBaseUrl}${request.query.user}&api_key=${lastFmApiKey}&period=${requestPeriod}&limit=${requestLimit}&format=json`
 		console.log(1, apiUrl)
