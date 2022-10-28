@@ -94,6 +94,8 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 		Promise.all(blah).then((values: AlbumReturn[][]) => {
 			const returnArray: AlbumReturn[] = []
 
+			console.log(1, values)
+
 			values.forEach((album) => {
 				if (album.length > 0) {
 					returnArray.push(album[0])
@@ -106,6 +108,7 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 				}
 			})
 
+			console.log(2, returnArray)
 			reply.send(1, returnArray)
 		})
 	} catch (error) {
