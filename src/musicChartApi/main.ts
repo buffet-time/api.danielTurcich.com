@@ -83,39 +83,16 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 		const apiUrl = `${topAlbumBaseUrl}${request.query.user}&api_key=${lastFmApiKey}&period=${requestPeriod}&limit=${requestLimit}&format=json`
 		const results: TopAlbumsResult = await ProperFetch(apiUrl)
 
-		const blah = results.topalbums.album.map((album) =>
-			ProperFetch(
-				`http://localhost:${[port]}/Search?album=${encodeURIComponent(
-					album.artist.name
-				)}`
+		const values = await Promise.all(
+			results.topalbums.album.map((album) =>
+				ProperFetch(
+					`http://localhost:${[port]}/Search?album=${encodeURIComponent(
+						album.artist.name
+					)}`
+				)
 			)
 		)
-
-		// await Promise.all(blah).then((values: AlbumReturn[][]) => {
-		// 	const returnArray: AlbumReturn[] = []
-
-		// 	// console.log(1, values)
-
-		// 	values.forEach((album) => {
-		// 		if (album.length > 0) {
-		// 			returnArray.push(album[0])
-		// 		} else {
-		// 			returnArray.push({
-		// 				image: grayImageUrl,
-		// 				artist: 'Placeholder',
-		// 				name: 'Placeholder'
-		// 			})
-		// 		}
-		// 	})
-
-		// 	console.log(2, returnArray)
-		// 	reply.send(returnArray)
-		// })
-
-		const values = await Promise.all(blah)
 		const returnArray: AlbumReturn[] = []
-
-		// console.log(1, values)
 
 		values.forEach((album) => {
 			if (album.length > 0) {
@@ -129,7 +106,6 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 			}
 		})
 
-		console.log(2, returnArray)
 		reply.send(returnArray)
 	} catch (error) {
 		console.log(`Error in /Search request:\n ${error}`)
