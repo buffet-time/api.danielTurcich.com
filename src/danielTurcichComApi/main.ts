@@ -19,6 +19,8 @@ export let sheets: sheets_v4.Sheets
 // FAstify/ etc setup
 const fastify = Fastify()
 const port = 2080
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 fastify.register(FastifyCors)
 
 let releasesArray: string[][]

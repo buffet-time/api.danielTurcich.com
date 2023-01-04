@@ -18,6 +18,7 @@ const searchBaseUrl = `${apiBaseUrl}?method=album.search&album=`
 const topAlbumBaseUrl = `${apiBaseUrl}?method=user.gettopalbums&user=`
 //  /2.0/?method=user.gettopalbums&user=rj&api_key=YOUR_API_KEY&format=json
 
+// @ts-expect-error
 fastify.register(FastifyCors)
 
 const searchRequestMax = 50

@@ -3,6 +3,7 @@ import { ProperFetch } from '../shared/shared'
 import { Release, type SpreadsheetParams } from '../types/typings'
 import { sheets } from './main'
 
+// TODO: find a better way so i can be lazier at the beginning of the year :)
 export const spreadsheets: SpreadsheetParams[] = [
 	{
 		id: '1tn0BmleHcs0okzWKhUnyOCWUPD422HvutpNQNzdAAIk',
@@ -19,6 +20,10 @@ export const spreadsheets: SpreadsheetParams[] = [
 	{
 		id: '1lyFD7uLMT0mRdGkKwvbIm_2pqk2YJU7rtRQVhHq-nwU',
 		range: 'Main!A2:G' // 2022
+	},
+	{
+		id: '1kbSckEbjlI55bCds6qB0bE4h2osHJjbTzXfFoBHnqQA',
+		range: 'Main!A2:G' // 2023
 	}
 ]
 
