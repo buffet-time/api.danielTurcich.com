@@ -1,0 +1,27 @@
+# multi directories
+**/*/node_modules
+**/*/dist
+
+# directories
+/.vscode
+/.husky
+/.github
+/.parcel-cache
+
+# singular files
+.prettierignore
+.gitignore
+.DS_Store
+LICENSE
+.npmrc
+.nvmrc
+.pnpmrc
+ignore.*
+
+# file types
+*.log
+*.svg
+*.min.svg
+*.yaml
+*.txt
+*.md

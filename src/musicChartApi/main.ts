@@ -43,20 +43,11 @@ fastify.get('/Search', async (request: any, reply: any) => {
 		const massagedResponse: AlbumReturn[] = []
 
 		results.results.albummatches.album.forEach((album) => {
-			// prevent sending back garbage results
-			if (
-				album.name &&
-				album.artist &&
-				album.image[3]['#text'] &&
-				album.name !== '(null)' &&
-				album.artist !== '(null)'
-			) {
-				massagedResponse.push({
-					image: album.image[3]['#text'],
-					artist: album.artist,
-					name: album.name
-				})
-			}
+			massagedResponse.push({
+				image: album.image[3]['#text'] ? album.image[3]['#text'] : grayImageUrl,
+				artist: album.artist ? album.artist : 'Placeholder Artist',
+				name: album.name ? album.name : 'Placeholder Album'
+			})
 		})
 
 		reply.send(massagedResponse)
