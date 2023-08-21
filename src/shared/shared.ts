@@ -10,17 +10,22 @@ declare global {
 export async function ProperFetch(
 	input: RequestInfo,
 	init?: RequestInit | undefined
-): Promise<any | null> {
+): Promise<any> {
 	try {
+		console.log(100, input)
 		const response = init ? await fetch(input, init) : await fetch(input)
 
+		console.log(101, response)
+
 		if (response.ok) {
+			console.log(102, await response.json())
 			return await response.json()
 		}
 
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 		console.error('Responded with an error:' + (await response.json()))
 		return null
-	} catch (error) {
+	} catch (error: any) {
 		console.error(`Error in fetch call: ${error}`)
 		return null
 	}

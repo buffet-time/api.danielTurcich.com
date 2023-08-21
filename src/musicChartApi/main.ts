@@ -39,7 +39,7 @@ fastify.get<{
 	IReply: AlbumReturn[]
 }>('/Search', async (request, reply) => {
 	try {
-		console.log(10, request)
+		console.log(10)
 		let requestLimit = searchRequestMinimum
 
 		// limit max to 50 and ensure its at least 10
