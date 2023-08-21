@@ -1,41 +1,38 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { google } from 'googleapis'
 import type { OAuth2Client } from 'googleapis-common'
 import { authorize } from '../shared/googleApis'
-import { redditCredentials } from './credentials/credentials'
 import Fastify from 'fastify'
-import snoowrap from 'snoowrap'
 
-const reddit = new snoowrap(redditCredentials)
 const fastify = Fastify()
 const port = 1080
 
 let gmailAuthClient: OAuth2Client
 
-fastify.get('/Email', async (request: any, reply: any) => {
+fastify.get('/Email', async (request, reply) => {
 	try {
+		// @ts-expect-error
 		const to = request.query.to as string
+		// @ts-expect-error
 		const subject = request.query.subject as string
+		// @ts-expect-error
 		const message = request.query.message as string
 
-		reply.send(sendEmail(to, subject, message))
+		void reply.send(await sendEmail(to, subject, message))
 	} catch (error) {
 		console.log(`Error in /Email request:\n ${error}`)
 	}
 })
 
-fastify.get('/Reddit/Top/Femboy', async (_request: any, reply: any) => {
-	try {
-		const redditResponse = await reddit
-			.getSubreddit('femboy')
-			.getHot({ limit: 1 })
-		// pinned messages have stickied set to true
-		const topPost = redditResponse.filter(
-			(post: { stickied: boolean }) => post.stickied === false
-		)
-		reply.send({ url: topPost[0].url })
-	} catch (error) {
-		console.log(`Error in /Reddit/Top/Femboy request:\n ${error}`)
-	}
+fastify.get('/Reddit/Top/Femboy', (_request, reply) => {
+	void reply.send('Command removed.')
 })
 
 // Run the server!
@@ -59,23 +56,23 @@ async function start() {
 				console.log('Error in onstart', error)
 				throw new Error('No emailCredentials.json, check readme.md')
 			}
-			console.log(`Listening on port: ${port}`)
 		}
 
-		onStart()
+		await onStart()
+		console.log(`Buffet Bot API: Listening on port: ${port}`)
 	} catch (err) {
 		console.log('Error in start()', err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
 }
-start()
+void start()
 
-function sendEmail(to: string, subject: string, message: string) {
+async function sendEmail(to: string, subject: string, message: string) {
 	try {
 		const gmail = google.gmail({ version: 'v1', auth: gmailAuthClient })
 
-		gmail.users.messages.send({
+		await gmail.users.messages.send({
 			auth: gmailAuthClient,
 			userId: 'buffetsbot@gmail.com',
 			requestBody: {

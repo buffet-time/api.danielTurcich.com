@@ -1,3 +1,7 @@
+// TODO: this is incredibly fragile code...
+
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ProperFetch } from '../shared/shared'
 import { Release, type SpreadsheetParams } from '../types/typings'
@@ -34,9 +38,9 @@ export function isNum(value: string) {
 
 // TODO: decouple this from referencing itself
 export async function getArray(params: SpreadsheetParams): Promise<string[][]> {
-	return ProperFetch(
+	return (await ProperFetch(
 		`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
-	) as unknown as string[][]
+	)) as unknown as string[][]
 }
 
 export async function getRows(
@@ -78,7 +82,7 @@ export async function getNumberOfRows(
 				range: range
 			},
 			(_err: any, res: any) => {
-				if (res && res.data.values) {
+				if (res?.data.values) {
 					for (let n = res.data.values.length - 1; n > 0; n--) {
 						// TODO: ENHANCE THIS TO ALLOW THE BOT TO USE THINGS BESIDES MUSIC HERE
 						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
@@ -93,15 +97,14 @@ export async function getNumberOfRows(
 
 export function rowIsFilledOut(row: string[], nonMusic?: boolean): boolean {
 	if (nonMusic) {
-		if (row && row[0] && row[1] && row[2] && row[3] && row[4]) {
+		if (row?.[0] && row[1] && row[2] && row[3] && row[4]) {
 			return true
 		}
 		return false
 	}
 
 	if (
-		row &&
-		row[Release.score] &&
+		row?.[Release.score] &&
 		row[Release.comments] &&
 		row[Release.artist] &&
 		row[Release.name] &&

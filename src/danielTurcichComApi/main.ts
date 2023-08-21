@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import path from 'path'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
@@ -19,40 +22,44 @@ export let sheets: sheets_v4.Sheets
 // FAstify/ etc setup
 const fastify = Fastify()
 const port = 2080
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-fastify.register(FastifyCors)
+await fastify.register(FastifyCors)
 
 let releasesArray: string[][]
 let statsObject: StatsObject
 let cachedCurrentYear: string[][]
 
-fastify.get('/Sheets', async (request: any, reply) => {
+fastify.get('/Sheets', async (request, reply) => {
 	try {
+		// @ts-expect-error
 		const id: string = request.query.id
+		// @ts-expect-error
 		const range: string = request.query.range
+		// @ts-expect-error
 		const index: number | undefined = Number(request.query.index)
+		// @ts-expect-error
 		const rows: string | undefined = request.query.rows
+		// @ts-expect-error
 		const nonMusic: string | undefined = request.query.nonmusic
 
 		switch (true) {
 			// prettier-ignore
 			case (rows === 'true' && nonMusic === 'true'):
-				reply.send(await getNumberOfRows(id, range, true))
+				void reply.send(await getNumberOfRows(id, range, true))
 				break
 			// prettier-ignore
 			case (rows === 'true'):
-				reply.send(await getNumberOfRows(id, range))
+				void reply.send(await getNumberOfRows(id, range))
 				break
 			// prettier-ignore
 			case (index >= 0):
-				reply.send(await getRows(id, range, index))
+				void reply.send(await getRows(id, range, index))
 				break
 			default:
-				reply.send(await getRows(id, range))
+				void reply.send(await getRows(id, range))
 				break
 		}
-	} catch (error) {
+	} catch (error: any) {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
 })
@@ -60,8 +67,9 @@ fastify.get('/Sheets', async (request: any, reply) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 fastify.get('/Releases', async (_request, reply) => {
 	try {
-		reply.send(releasesArray)
+		void reply.send(releasesArray)
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		console.log(`Error in /Releases request:\n ${error}`)
 	}
 })
@@ -69,28 +77,29 @@ fastify.get('/Releases', async (_request, reply) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 fastify.get('/Stats', async (_request, reply) => {
 	try {
-		reply.send(statsObject)
+		void reply.send(statsObject)
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		console.log(`Error in /Stats request:\n ${error}`)
 	}
 })
 
 // Run the server!
-async function start() {
+function start() {
 	try {
 		fastify.listen({ port: port }, (error) => {
 			if (error) {
 				console.log(error)
 			}
 		})
-		onStart()
+		void onStart()
 	} catch (err) {
 		console.log(err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
 }
-start()
+void start()
 
 async function onStart() {
 	try {
@@ -108,7 +117,7 @@ async function onStart() {
 		})
 		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient })
 	} catch (error: any) {
-		throw new Error('Error in onStart(): ', error)
+		throw console.log('Error in onStart(): ', error)
 	}
 
 	await initializeSheets()
@@ -198,10 +207,13 @@ async function initializeSheets() {
 
 function setupIntervals() {
 	// in 2022
-	setInterval(async () => {
-		const retrievedCurrentYear = await getArray(spreadsheets.at(-1)!)
-		if (retrievedCurrentYear !== cachedCurrentYear) {
-			initializeSheets()
+	setInterval(() => {
+		async function blah() {
+			const retrievedCurrentYear = await getArray(spreadsheets.at(-1)!)
+			if (retrievedCurrentYear !== cachedCurrentYear) {
+				await initializeSheets()
+			}
 		}
+		void blah()
 	}, 1_800_000) // 30 minutes
 }

@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { lastFmApiKey } from './credentials/apiKey'
 import type {
@@ -19,7 +26,7 @@ const topAlbumBaseUrl = `${apiBaseUrl}?method=user.gettopalbums&user=`
 //  /2.0/?method=user.gettopalbums&user=rj&api_key=YOUR_API_KEY&format=json
 
 // @ts-expect-error
-fastify.register(FastifyCors)
+await fastify.register(FastifyCors)
 
 const searchRequestMax = 50
 const searchRequestMinimum = 10

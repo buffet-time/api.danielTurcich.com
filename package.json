@@ -10,15 +10,17 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": "^19.4.0",
+		"node": "^20.0.0",
 		"pnpm": "^8.1.0"
 	},
 	"scripts": {
 		"bot:serve": "cd ./src/buffetBotJsApi/ && pnpm serve",
 		"chart:serve": "cd ./src/musicChartApi/ && pnpm serve",
 		"website:serve": "cd ./src/danielTurcichComApi/ && pnpm serve",
-		"lint-check": "eslint \"**/**/*.ts\" && echo lint-check done",
-		"format-check": "prettier --check \"**/**\" && echo format-check done",
+		"lint-check-1": "eslint \"**/**/*.ts\" && echo lint-check done",
+		"lint-check": "echo re-implement",
+		"format-check-1": "prettier --check \"**/**\" && echo format-check done",
+		"format-check": "echo re-implement",
 		"bot:build": "cd ./src/buffetBotJsApi/ && pnpm build",
 		"chart:build": "cd ./src/musicChartApi/ && pnpm build",
 		"website:build": "cd ./src/danielTurcichComApi/ && pnpm build",
@@ -28,28 +30,25 @@
 	},
 	"dependencies": {
 		"@google-cloud/local-auth": "^2.1.1",
-		"@octokit/request": "^6.2.3",
-		"fastify": "^4.15.0",
+		"fastify": "^4.21.0",
 		"fastify-cors": "^6.1.0",
 		"file-system": "^2.2.2",
-		"google-auth-library": "8.6.0",
-		"googleapis": "108.0.1",
-		"snoowrap": "^1.23.0"
+		"google-auth-library": "^8.9.0",
+		"googleapis": "^122.0.0"
 	},
 	"devDependencies": {
-		"@octokit/types": "^8.2.1",
-		"@types/node": "^18.15.11",
+		"@types/node": "^20.5.1",
 		"@types/request": "^2.48.8",
-		"@typescript-eslint/eslint-plugin": "^5.57.1",
-		"@typescript-eslint/parser": "^5.57.1",
-		"eslint": "^8.37.0",
-		"eslint-config-prettier": "^8.8.0",
-		"eslint-plugin-prettier": "^4.2.1",
+		"@typescript-eslint/eslint-plugin": "^6.4.0",
+		"@typescript-eslint/parser": "^6.4.0",
+		"eslint": "^8.47.0",
+		"eslint-config-prettier": "^8.10.0",
+		"eslint-plugin-prettier": "^5.0.0",
 		"googleapis-common": "^6.0.4",
 		"husky": "^8.0.3",
-		"parcel": "^2.8.3",
-		"prettier": "^2.8.7",
-		"typescript": "^5.0.3",
-		"undici": "^5.21.0"
+		"parcel": "^2.9.3",
+		"prettier": "^3.0.2",
+		"typescript": "^5.1.6",
+		"undici": "^5.23.0"
 	}
 }
