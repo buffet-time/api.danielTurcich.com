@@ -19,7 +19,7 @@ export async function ProperFetch(
 		console.log(await response.json())
 
 		if (response.ok) {
-			console.log(102, await response.json())
+			console.log(102, await response.text())
 			return await response.json()
 		}
 
