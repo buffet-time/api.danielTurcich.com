@@ -39,7 +39,7 @@ fastify.get<{
 	IReply: AlbumReturn[]
 }>('/Search', async (request, reply) => {
 	try {
-		console.log(10)
+		console.log(10, request)
 		let requestLimit = searchRequestMinimum
 
 		// limit max to 50 and ensure its at least 10
@@ -57,10 +57,10 @@ fastify.get<{
 		console.log(12, apiUrl)
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const results: AlbumResults = await ProperFetch(apiUrl)
-		console.log(13)
+		console.log(13, results.results.albummatches.album[0])
 
 		const massagedResponse: AlbumReturn[] = []
-		console.log(14)
+		console.log(14, massagedResponse)
 
 		results.results.albummatches.album.forEach((album) => {
 			massagedResponse.push({
@@ -70,9 +70,9 @@ fastify.get<{
 			})
 		})
 
-		console.log(15)
+		console.log(15, massagedResponse)
 
-		void reply.send(massagedResponse)
+		await reply.send(massagedResponse)
 	} catch (error: any) {
 		console.log(`Error in /Search request:\n ${error}`)
 	}
