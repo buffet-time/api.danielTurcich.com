@@ -1,11 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { lastFmApiKey } from './credentials/apiKey'
 import type {
 	AlbumReturn,
@@ -25,13 +17,29 @@ const searchBaseUrl = `${apiBaseUrl}?method=album.search&album=`
 const topAlbumBaseUrl = `${apiBaseUrl}?method=user.gettopalbums&user=`
 //  /2.0/?method=user.gettopalbums&user=rj&api_key=YOUR_API_KEY&format=json
 
+type LastfmPeriod =
+	| 'overall'
+	| '7day'
+	| '1month'
+	| '3month'
+	| '6month'
+	| '12month'
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 await fastify.register(FastifyCors)
 
 const searchRequestMax = 50
 const searchRequestMinimum = 10
-fastify.get('/Search', async (request: any, reply: any) => {
+fastify.get<{
+	Querystring: {
+		limit: number
+		album: string
+	}
+	IReply: AlbumReturn[]
+}>('/Search', async (request, reply) => {
 	try {
+		console.log(10)
 		let requestLimit = searchRequestMinimum
 
 		// limit max to 50 and ensure its at least 10
@@ -40,15 +48,19 @@ fastify.get('/Search', async (request: any, reply: any) => {
 			request.query.limit <= searchRequestMax &&
 			request.query.limit >= searchRequestMinimum
 		) {
+			console.log(11)
 			requestLimit = request.query.limit
 		}
 
 		const apiUrl = `${searchBaseUrl}${request.query.album}&api_key=${lastFmApiKey}&limit=${requestLimit}&format=json`
 
-		console.log(1, apiUrl)
+		console.log(12, apiUrl)
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const results: AlbumResults = await ProperFetch(apiUrl)
+		console.log(13)
 
 		const massagedResponse: AlbumReturn[] = []
+		console.log(14)
 
 		results.results.albummatches.album.forEach((album) => {
 			massagedResponse.push({
@@ -58,15 +70,23 @@ fastify.get('/Search', async (request: any, reply: any) => {
 			})
 		})
 
-		reply.send(massagedResponse)
-	} catch (error) {
+		console.log(15)
+
+		void reply.send(massagedResponse)
+	} catch (error: any) {
 		console.log(`Error in /Search request:\n ${error}`)
 	}
 })
 
 const requestMax = 100
 const requestMinimum = 1
-fastify.get('/TopAlbums', async (request: any, reply: any) => {
+fastify.get<{
+	Querystring: {
+		period: LastfmPeriod
+		limit: number
+		user: string
+	}
+}>('/TopAlbums', async (request, reply) => {
 	try {
 		let requestLimit = requestMinimum
 
@@ -81,40 +101,31 @@ fastify.get('/TopAlbums', async (request: any, reply: any) => {
 
 		const requestPeriod = request.query.period ? request.query.period : '1month'
 		const apiUrl = `${topAlbumBaseUrl}${request.query.user}&api_key=${lastFmApiKey}&period=${requestPeriod}&limit=${requestLimit}&format=json`
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const results: TopAlbumsResult = await ProperFetch(apiUrl)
 
-		const values = await Promise.all(
+		const values = (await Promise.all(
 			results.topalbums.album.map((album) =>
 				ProperFetch(
-					`http://localhost:${[port]}/Search?album=${encodeURIComponent(
+					`http://localhost:${port}/Search?album=${encodeURIComponent(
 						album.artist.name
 					)}`
 				)
 			)
-		)
-		const returnArray: AlbumReturn[] = []
+		)) as AlbumReturn[]
 
-		values.forEach((album) => {
-			if (album.length > 0) {
-				returnArray.push(album[0])
-			} else {
-				returnArray.push({
-					image: grayImageUrl,
-					artist: 'Placeholder',
-					name: 'Placeholder'
-				})
-			}
-		})
+		console.log(2)
+		const returnArray: AlbumReturn[] = values.map((album) => album)
 
-		reply.send(returnArray)
-	} catch (error) {
+		void reply.send(returnArray)
+	} catch (error: any) {
 		console.log(`Error in /Search request:\n ${error}`)
 	}
 })
 
 start()
 
-async function start() {
+function start() {
 	try {
 		fastify.listen({ port: port }, (error: any) => {
 			if (error) {
