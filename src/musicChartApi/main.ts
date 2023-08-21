@@ -45,6 +45,7 @@ fastify.get('/Search', async (request: any, reply: any) => {
 
 		const apiUrl = `${searchBaseUrl}${request.query.album}&api_key=${lastFmApiKey}&limit=${requestLimit}&format=json`
 
+		console.log(1, apiUrl)
 		const results: AlbumResults = await ProperFetch(apiUrl)
 
 		const massagedResponse: AlbumReturn[] = []
