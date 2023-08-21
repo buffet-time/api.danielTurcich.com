@@ -39,7 +39,7 @@ fastify.get<{
 	IReply: AlbumReturn[]
 }>('/Search', async (request, reply) => {
 	try {
-		console.log(10)
+		// console.log(10)
 		let requestLimit = searchRequestMinimum
 
 		// limit max to 50 and ensure its at least 10
@@ -48,7 +48,7 @@ fastify.get<{
 			request.query.limit <= searchRequestMax &&
 			request.query.limit >= searchRequestMinimum
 		) {
-			console.log(11)
+			// console.log(11)
 			requestLimit = request.query.limit
 		}
 
@@ -57,10 +57,11 @@ fastify.get<{
 		console.log(12, apiUrl)
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const results: AlbumResults = await ProperFetch(apiUrl)
-		console.log(13, results.results.albummatches.album[0])
+		// console.log(13, results.results.albummatches.album[0])
+		// console.table(14, )
 
 		const massagedResponse: AlbumReturn[] = []
-		console.log(14, massagedResponse)
+		// console.log(14, massagedResponse)
 
 		results.results.albummatches.album.forEach((album) => {
 			massagedResponse.push({
@@ -70,7 +71,7 @@ fastify.get<{
 			})
 		})
 
-		console.log(15, massagedResponse)
+		// console.log(15, massagedResponse)
 
 		await reply.send(massagedResponse)
 	} catch (error: any) {
@@ -114,7 +115,6 @@ fastify.get<{
 			)
 		)) as AlbumReturn[]
 
-		console.log(2)
 		const returnArray: AlbumReturn[] = values.map((album) => album)
 
 		void reply.send(returnArray)

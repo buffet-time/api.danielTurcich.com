@@ -15,7 +15,8 @@ export async function ProperFetch(
 		console.log(100, input)
 		const response = init ? await fetch(input, init) : await fetch(input)
 
-		console.log(101, response)
+		// console.log(101, response)
+		console.table(response)
 
 		if (response.ok) {
 			console.log(102, await response.json())
