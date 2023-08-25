@@ -15,16 +15,14 @@
 	},
 	"scripts": {
 		"bot:serve": "cd ./src/buffetBotJsApi/ && pnpm serve",
-		"chart:serve": "cd ./src/musicChartApi/ && pnpm serve",
 		"website:serve": "cd ./src/danielTurcichComApi/ && pnpm serve",
 		"lint-check-1": "eslint \"**/**/*.ts\" && echo lint-check done",
 		"lint-check": "echo re-implement",
 		"format-check-1": "prettier --check \"**/**\" && echo format-check done",
 		"format-check": "echo re-implement",
 		"bot:build": "cd ./src/buffetBotJsApi/ && pnpm build",
-		"chart:build": "cd ./src/musicChartApi/ && pnpm build",
 		"website:build": "cd ./src/danielTurcichComApi/ && pnpm build",
-		"build-checks": "pnpm bot:build && pnpm chart:build && pnpm website:build",
+		"build-checks": "pnpm bot:build && pnpm website:build",
 		"checks": "pnpm lint-check && pnpm format-check && pnpm build-checks",
 		"prepare": "husky install"
 	},

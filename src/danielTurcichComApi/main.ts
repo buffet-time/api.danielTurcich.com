@@ -103,19 +103,24 @@ void start()
 
 async function onStart() {
 	try {
+		console.log('onstart')
 		const sheetsTokenPath = path.join(
 			process.cwd(),
 			'./credentials/sheetsToken.json'
 		)
+		console.log(1)
 		const sheetsScopes = [
 			'https://www.googleapis.com/auth/spreadsheets.readonly'
 		] // If modifying these scopes, delete token.json.
 
+		console.log(2)
 		const sheetsAuthClient = await authorize({
 			scopes: sheetsScopes,
 			tokenPath: sheetsTokenPath
 		})
+		console.log(3)
 		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient })
+		console.log(4)
 	} catch (error: any) {
 		throw console.log('Error in onStart(): ', error)
 	}
