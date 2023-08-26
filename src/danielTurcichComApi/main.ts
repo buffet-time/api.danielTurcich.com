@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-mixed-spaces-and-tabs */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import path from 'path'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
@@ -21,7 +18,7 @@ await fastify.register(FastifyCors)
 
 let releasesArray: string[][]
 let statsObject: StatsObject
-// let cachedCurrentYear: string[][]
+let cachedCurrentYear: string[][]
 
 async function getSheets(
 	id: string,
@@ -50,14 +47,19 @@ async function getSheets(
 fastify.get('/Sheets', async (request, reply) => {
 	try {
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const id: string = request.query.id
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const range: string = request.query.range
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const index: number | undefined = Number(request.query.index)
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const rows: string | undefined = request.query.rows
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const nonMusic: string | undefined = request.query.nonmusic
 
 		await reply.send(await getSheets(id, range, index, rows, nonMusic))
@@ -69,9 +71,8 @@ fastify.get('/Sheets', async (request, reply) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 fastify.get('/Releases', async (_request, reply) => {
 	try {
-		void reply.send(releasesArray)
-	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		await reply.send(releasesArray)
+	} catch (error: any) {
 		console.log(`Error in /Releases request:\n ${error}`)
 	}
 })
@@ -80,8 +81,7 @@ fastify.get('/Releases', async (_request, reply) => {
 fastify.get('/Stats', async (_request, reply) => {
 	try {
 		void reply.send(statsObject)
-	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+	} catch (error: any) {
 		console.log(`Error in /Stats request:\n ${error}`)
 	}
 })
@@ -110,19 +110,15 @@ async function onStart() {
 			process.cwd(),
 			'./credentials/sheetsToken.json'
 		)
-		console.log(1)
 		const sheetsScopes = [
 			'https://www.googleapis.com/auth/spreadsheets.readonly'
 		] // If modifying these scopes, delete token.json.
 
-		console.log(2)
 		const sheetsAuthClient = await authorize({
 			scopes: sheetsScopes,
 			tokenPath: sheetsTokenPath
 		})
-		console.log(3)
 		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient })
-		console.log(4)
 	} catch (error: any) {
 		throw console.log('Error in onStart(): ', error)
 	}
@@ -144,7 +140,7 @@ async function initializeSheets() {
 		return
 	}
 
-	// cachedCurrentYear = spreadsheetArrays.at(-1)!
+	cachedCurrentYear = spreadsheetArrays.at(-1)!
 
 	releasesArray = spreadsheetArrays
 		.flat()
@@ -201,6 +197,7 @@ async function initializeSheets() {
 		curYear > 1959
 			? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			  // @ts-expect-error
+			  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			  releasePerYear[ReleasesIn[current[Release.year].slice(0, 3) + '0s']]++
 			: releasePerYear[ReleasesIn['1950s']]++
 	})
@@ -218,14 +215,14 @@ async function initializeSheets() {
 
 // TODO fix this.
 function setupIntervals() {
-	// // in 2022
-	// setInterval(() => {
-	// 	async function blah() {
-	// 		const retrievedCurrentYear = await getArray(spreadsheets.at(-1)!)
-	// 		if (retrievedCurrentYear !== cachedCurrentYear) {
-	// 			await initializeSheets()
-	// 		}
-	// 	}
-	// 	void blah()
-	// }, 1_800_000) // 30 minutes
+	setInterval(() => {
+		async function blah() {
+			const params = spreadsheets.at(-1)!
+			const retrievedCurrentYear = await getSheets(params.id, params.range)
+			if (retrievedCurrentYear !== cachedCurrentYear) {
+				await initializeSheets()
+			}
+		}
+		void blah()
+	}, 1_800_000) // 30 minutes
 }

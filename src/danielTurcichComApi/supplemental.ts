@@ -89,14 +89,14 @@ export async function getNumberOfRows(
 
 export function rowIsFilledOut(row: string[], nonMusic?: boolean): boolean {
 	if (nonMusic) {
-		if (row?.[0] && row[1] && row[2] && row[3] && row[4]) {
+		if (row[0] && row[1] && row[2] && row[3] && row[4]) {
 			return true
 		}
 		return false
 	}
 
 	if (
-		row?.[Release.score] &&
+		row[Release.score] &&
 		row[Release.comments] &&
 		row[Release.artist] &&
 		row[Release.name] &&

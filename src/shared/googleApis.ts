@@ -16,28 +16,21 @@ export async function authorize({
 	scopes: string[]
 	tokenPath: string
 }) {
-	console.log(1)
 	let client = (await loadSavedCredentialsIfExist()) as OAuth2Client | null
 
-	console.log(2)
 	if (client) {
-		console.log(3)
 		return client
 	}
 
-	console.log(4)
 	client = await authenticate({
 		scopes: scopes,
 		keyfilePath: credentialsPath
 	})
-	console.log(5)
 
 	if (client.credentials) {
-		console.log(6)
 		await saveCredentials()
 	}
 
-	console.log(7)
 	return client
 
 	// Reads previously authorized credentials from the save file.
