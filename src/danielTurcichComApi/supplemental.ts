@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { ProperFetch } from '../shared/shared'
 import { Release, type SpreadsheetParams } from '../types/typings'
 import { sheets } from './main'
 
@@ -34,13 +33,6 @@ export const spreadsheets: SpreadsheetParams[] = [
 // for readability
 export function isNum(value: string) {
 	return !isNaN(Number(value))
-}
-
-// TODO: decouple this from referencing itself
-export async function getArray(params: SpreadsheetParams): Promise<string[][]> {
-	return (await ProperFetch(
-		`https://api.danielturcich.com/Sheets?id=${params.id}&range=${params.range}`
-	)) as unknown as string[][]
 }
 
 export async function getRows(

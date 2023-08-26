@@ -111,22 +111,6 @@ importers:
         specifier: ^4.8.4
         version: 4.8.4
 
-  src/musicChartApi:
-    dependencies:
-      '@fastify/cors':
-        specifier: ^8.1.0
-        version: 8.1.0
-      fastify:
-        specifier: ^4.9.2
-        version: 4.9.2
-    devDependencies:
-      '@types/node':
-        specifier: ^18.11.0
-        version: 18.11.0
-      typescript:
-        specifier: ^4.8.4
-        version: 4.8.4
-
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:

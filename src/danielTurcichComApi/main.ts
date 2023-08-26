@@ -9,13 +9,7 @@ import FastifyCors from '@fastify/cors'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from '../shared/googleApis'
 import { Release, ReleasesIn, type StatsObject } from '../types/typings'
-import {
-	getArray,
-	getNumberOfRows,
-	getRows,
-	isNum,
-	spreadsheets
-} from './supplemental'
+import { getNumberOfRows, getRows, isNum, spreadsheets } from './supplemental'
 
 export let sheets: sheets_v4.Sheets
 
@@ -27,7 +21,31 @@ await fastify.register(FastifyCors)
 
 let releasesArray: string[][]
 let statsObject: StatsObject
-let cachedCurrentYear: string[][]
+// let cachedCurrentYear: string[][]
+
+async function getSheets(
+	id: string,
+	range: string,
+	index?: number,
+	rows?: string,
+	nonMusic?: string
+) {
+	switch (true) {
+		// prettier-ignore
+		case (rows === 'true' && nonMusic === 'true'):
+				return await getNumberOfRows(id, range, true)
+		// prettier-ignore
+		case (rows === 'true'):
+				return await getNumberOfRows(id, range)
+
+		// prettier-ignore
+		case (index && index >= 0):
+				return await getRows(id, range, index)
+
+		default:
+			return await getRows(id, range)
+	}
+}
 
 fastify.get('/Sheets', async (request, reply) => {
 	try {
@@ -42,23 +60,7 @@ fastify.get('/Sheets', async (request, reply) => {
 		// @ts-expect-error
 		const nonMusic: string | undefined = request.query.nonmusic
 
-		switch (true) {
-			// prettier-ignore
-			case (rows === 'true' && nonMusic === 'true'):
-				void reply.send(await getNumberOfRows(id, range, true))
-				break
-			// prettier-ignore
-			case (rows === 'true'):
-				void reply.send(await getNumberOfRows(id, range))
-				break
-			// prettier-ignore
-			case (index >= 0):
-				void reply.send(await getRows(id, range, index))
-				break
-			default:
-				void reply.send(await getRows(id, range))
-				break
-		}
+		await reply.send(await getSheets(id, range, index, rows, nonMusic))
 	} catch (error: any) {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
@@ -85,21 +87,21 @@ fastify.get('/Stats', async (_request, reply) => {
 })
 
 // Run the server!
-function start() {
+async function start() {
 	try {
 		fastify.listen({ port: port }, (error) => {
 			if (error) {
 				console.log(error)
 			}
 		})
-		void onStart()
+		await onStart()
 	} catch (err) {
 		console.log(err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
 }
-void start()
+await start()
 
 async function onStart() {
 	try {
@@ -134,11 +136,15 @@ async function onStart() {
 async function initializeSheets() {
 	const spreadsheetArrays = await Promise.all(
 		spreadsheets.map((current) => {
-			return getArray(current)
+			return getSheets(current.id, current.range) as unknown as string[][]
 		})
 	)
 
-	cachedCurrentYear = spreadsheetArrays.at(-1)!
+	if (!spreadsheetArrays) {
+		return
+	}
+
+	// cachedCurrentYear = spreadsheetArrays.at(-1)!
 
 	releasesArray = spreadsheetArrays
 		.flat()
@@ -210,15 +216,16 @@ async function initializeSheets() {
 	}
 }
 
+// TODO fix this.
 function setupIntervals() {
-	// in 2022
-	setInterval(() => {
-		async function blah() {
-			const retrievedCurrentYear = await getArray(spreadsheets.at(-1)!)
-			if (retrievedCurrentYear !== cachedCurrentYear) {
-				await initializeSheets()
-			}
-		}
-		void blah()
-	}, 1_800_000) // 30 minutes
+	// // in 2022
+	// setInterval(() => {
+	// 	async function blah() {
+	// 		const retrievedCurrentYear = await getArray(spreadsheets.at(-1)!)
+	// 		if (retrievedCurrentYear !== cachedCurrentYear) {
+	// 			await initializeSheets()
+	// 		}
+	// 	}
+	// 	void blah()
+	// }, 1_800_000) // 30 minutes
 }
