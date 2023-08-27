@@ -40,7 +40,7 @@ export async function getRows(
 	range: string,
 	index?: number
 ): Promise<string[][]> {
-	// TODO refactor to async await
+	console.log(10, spreadsheetId, range)
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
@@ -66,7 +66,6 @@ export async function getNumberOfRows(
 	range: string,
 	nonMusic?: boolean
 ): Promise<number> {
-	// TODO refactor to async await
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{

@@ -18,7 +18,7 @@ await fastify.register(FastifyCors)
 
 let releasesArray: string[][]
 let statsObject: StatsObject
-let cachedCurrentYear: string[][]
+let cachedSpreadsheetCurrentYear: string[][]
 
 async function getSheets(
 	id: string,
@@ -30,16 +30,21 @@ async function getSheets(
 	switch (true) {
 		// prettier-ignore
 		case (rows === 'true' && nonMusic === 'true'):
+			console.log(2)
 				return await getNumberOfRows(id, range, true)
 		// prettier-ignore
-		case (rows === 'true'):
+		case (rows === 'true'): 
+						console.log(3)
 				return await getNumberOfRows(id, range)
 
 		// prettier-ignore
 		case (index && index >= 0):
+			
+		console.log(4)
 				return await getRows(id, range, index)
 
 		default:
+			console.log(5)
 			return await getRows(id, range)
 	}
 }
@@ -62,6 +67,8 @@ fastify.get('/Sheets', async (request, reply) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const nonMusic: string | undefined = request.query.nonmusic
 
+		console.log(1, id, range, index, rows, nonMusic)
+
 		await reply.send(await getSheets(id, range, index, rows, nonMusic))
 	} catch (error: any) {
 		console.log(`Error in /Sheets request:\n ${error}`)
@@ -80,7 +87,7 @@ fastify.get('/Releases', async (_request, reply) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 fastify.get('/Stats', async (_request, reply) => {
 	try {
-		void reply.send(statsObject)
+		await reply.send(statsObject)
 	} catch (error: any) {
 		console.log(`Error in /Stats request:\n ${error}`)
 	}
@@ -140,7 +147,7 @@ async function initializeSheets() {
 		return
 	}
 
-	cachedCurrentYear = spreadsheetArrays.at(-1)!
+	cachedSpreadsheetCurrentYear = spreadsheetArrays.at(-1)!
 
 	releasesArray = spreadsheetArrays
 		.flat()
@@ -213,16 +220,19 @@ async function initializeSheets() {
 	}
 }
 
-// TODO fix this.
+// Checks every 30 minutes to update the cached spreadsheets
 function setupIntervals() {
 	setInterval(() => {
-		async function blah() {
+		async function checkLatestSpreadsheet() {
 			const params = spreadsheets.at(-1)!
-			const retrievedCurrentYear = await getSheets(params.id, params.range)
-			if (retrievedCurrentYear !== cachedCurrentYear) {
+			const retrievedSpreadsheetCurrentYear = await getSheets(
+				params.id,
+				params.range
+			)
+			if (retrievedSpreadsheetCurrentYear !== cachedSpreadsheetCurrentYear) {
 				await initializeSheets()
 			}
 		}
-		void blah()
+		void checkLatestSpreadsheet()
 	}, 1_800_000) // 30 minutes
 }
