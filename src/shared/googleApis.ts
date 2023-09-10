@@ -37,8 +37,10 @@ export async function authorize({
 	async function loadSavedCredentialsIfExist() {
 		try {
 			const content = await filesystem.readFile(tokenPath)
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const credentials = JSON.parse(content.toString())
 
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			return google.auth.fromJSON(credentials)
 		} catch (err) {
 			return null
@@ -48,12 +50,16 @@ export async function authorize({
 	// Serializes credentials to a file comptible with GoogleAUth.fromJSON.
 	async function saveCredentials() {
 		const content = await filesystem.readFile(credentialsPath)
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const keys = JSON.parse(content.toString())
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 		const key = keys.installed || keys.web
 
 		const payload = JSON.stringify({
 			type: 'authorized_user',
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 			client_id: key.client_id,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 			client_secret: key.client_secret,
 			refresh_token: client?.credentials.refresh_token
 		})

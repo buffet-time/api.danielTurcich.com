@@ -1,21 +1,12 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-mixed-spaces-and-tabs */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import path from 'path'
 import Fastify from 'fastify'
 import FastifyCors from '@fastify/cors'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from '../shared/googleApis'
 import { Release, ReleasesIn, type StatsObject } from '../types/typings'
-import {
-	getArray,
-	getNumberOfRows,
-	getRows,
-	isNum,
-	spreadsheets
-} from './supplemental'
+import { getNumberOfRows, getRows, isNum, spreadsheets } from './supplemental'
 
 export let sheets: sheets_v4.Sheets
 
@@ -26,39 +17,53 @@ const port = 2080
 await fastify.register(FastifyCors)
 
 let releasesArray: string[][]
-let statsObject: StatsObject
-let cachedCurrentYear: string[][]
+let cachedStatsObject: StatsObject
+let cachedSpreadsheetCurrentYear: string[][]
+
+async function getSheets(
+	id: string,
+	range: string,
+	index?: number,
+	rows?: string,
+	nonMusic?: string
+) {
+	switch (true) {
+		// prettier-ignore
+		case (rows === 'true' && nonMusic === 'true'):
+				return await getNumberOfRows(id, range, true)
+		// prettier-ignore
+		case (rows === 'true'): 
+				return await getNumberOfRows(id, range)
+
+		// prettier-ignore
+		case (index && index >= 0):
+			
+				return await getRows(id, range, index)
+
+		default:
+			return await getRows(id, range)
+	}
+}
 
 fastify.get('/Sheets', async (request, reply) => {
 	try {
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const id: string = request.query.id
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const range: string = request.query.range
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const index: number | undefined = Number(request.query.index)
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const rows: string | undefined = request.query.rows
 		// @ts-expect-error
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const nonMusic: string | undefined = request.query.nonmusic
 
-		switch (true) {
-			// prettier-ignore
-			case (rows === 'true' && nonMusic === 'true'):
-				void reply.send(await getNumberOfRows(id, range, true))
-				break
-			// prettier-ignore
-			case (rows === 'true'):
-				void reply.send(await getNumberOfRows(id, range))
-				break
-			// prettier-ignore
-			case (index >= 0):
-				void reply.send(await getRows(id, range, index))
-				break
-			default:
-				void reply.send(await getRows(id, range))
-				break
-		}
+		await reply.send(await getSheets(id, range, index, rows, nonMusic))
 	} catch (error: any) {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
@@ -67,9 +72,8 @@ fastify.get('/Sheets', async (request, reply) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 fastify.get('/Releases', async (_request, reply) => {
 	try {
-		void reply.send(releasesArray)
-	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		await reply.send(releasesArray)
+	} catch (error: any) {
 		console.log(`Error in /Releases request:\n ${error}`)
 	}
 })
@@ -77,32 +81,32 @@ fastify.get('/Releases', async (_request, reply) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 fastify.get('/Stats', async (_request, reply) => {
 	try {
-		void reply.send(statsObject)
-	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		await reply.send(cachedStatsObject)
+	} catch (error: any) {
 		console.log(`Error in /Stats request:\n ${error}`)
 	}
 })
 
 // Run the server!
-function start() {
+async function start() {
 	try {
 		fastify.listen({ port: port }, (error) => {
 			if (error) {
-				console.log(error)
+				console.log('Error in fastify.listen()', error)
 			}
 		})
-		void onStart()
+		await onStart()
 	} catch (err) {
-		console.log(err)
+		console.log('Error in onstart', err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
 }
-void start()
+await start()
 
 async function onStart() {
 	try {
+		console.log('onstart')
 		const sheetsTokenPath = path.join(
 			process.cwd(),
 			'./credentials/sheetsToken.json'
@@ -129,11 +133,15 @@ async function onStart() {
 async function initializeSheets() {
 	const spreadsheetArrays = await Promise.all(
 		spreadsheets.map((current) => {
-			return getArray(current)
+			return getSheets(current.id, current.range) as unknown as string[][]
 		})
 	)
 
-	cachedCurrentYear = spreadsheetArrays.at(-1)!
+	if (!spreadsheetArrays) {
+		return
+	}
+
+	cachedSpreadsheetCurrentYear = spreadsheetArrays.at(-1)!
 
 	releasesArray = spreadsheetArrays
 		.flat()
@@ -190,11 +198,12 @@ async function initializeSheets() {
 		curYear > 1959
 			? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			  // @ts-expect-error
+			  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 			  releasePerYear[ReleasesIn[current[Release.year].slice(0, 3) + '0s']]++
 			: releasePerYear[ReleasesIn['1950s']]++
 	})
 
-	statsObject = {
+	cachedStatsObject = {
 		averageScore: (tempScore / scoreCount).toFixed(2),
 		numberOfArtists: artistArray.length,
 		averageYear: (tempYear / yearCount).toFixed(2),
@@ -205,15 +214,19 @@ async function initializeSheets() {
 	}
 }
 
+// Checks every 30 minutes to update the cached spreadsheets
 function setupIntervals() {
-	// in 2022
 	setInterval(() => {
-		async function blah() {
-			const retrievedCurrentYear = await getArray(spreadsheets.at(-1)!)
-			if (retrievedCurrentYear !== cachedCurrentYear) {
+		async function checkLatestSpreadsheet() {
+			const params = spreadsheets.at(-1)!
+			const retrievedSpreadsheetCurrentYear = await getSheets(
+				params.id,
+				params.range
+			)
+			if (retrievedSpreadsheetCurrentYear !== cachedSpreadsheetCurrentYear) {
 				await initializeSheets()
 			}
 		}
-		void blah()
+		void checkLatestSpreadsheet()
 	}, 1_800_000) // 30 minutes
 }

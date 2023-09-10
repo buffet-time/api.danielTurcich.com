@@ -15,16 +15,14 @@
 	},
 	"scripts": {
 		"bot:serve": "cd ./src/buffetBotJsApi/ && pnpm serve",
-		"chart:serve": "cd ./src/musicChartApi/ && pnpm serve",
 		"website:serve": "cd ./src/danielTurcichComApi/ && pnpm serve",
 		"lint-check-1": "eslint \"**/**/*.ts\" && echo lint-check done",
 		"lint-check": "echo re-implement",
 		"format-check-1": "prettier --check \"**/**\" && echo format-check done",
 		"format-check": "echo re-implement",
 		"bot:build": "cd ./src/buffetBotJsApi/ && pnpm build",
-		"chart:build": "cd ./src/musicChartApi/ && pnpm build",
 		"website:build": "cd ./src/danielTurcichComApi/ && pnpm build",
-		"build-checks": "pnpm bot:build && pnpm chart:build && pnpm website:build",
+		"build-checks": "pnpm bot:build && pnpm website:build",
 		"checks": "pnpm lint-check && pnpm format-check && pnpm build-checks",
 		"prepare": "husky install"
 	},
@@ -37,18 +35,18 @@
 		"googleapis": "^122.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^20.5.1",
+		"@types/node": "^20.5.6",
 		"@types/request": "^2.48.8",
-		"@typescript-eslint/eslint-plugin": "^6.4.0",
-		"@typescript-eslint/parser": "^6.4.0",
-		"eslint": "^8.47.0",
-		"eslint-config-prettier": "^8.10.0",
+		"@typescript-eslint/eslint-plugin": "^6.4.1",
+		"@typescript-eslint/parser": "^6.4.1",
+		"eslint": "^8.48.0",
+		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-prettier": "^5.0.0",
 		"googleapis-common": "^6.0.4",
 		"husky": "^8.0.3",
 		"parcel": "^2.9.3",
 		"prettier": "^3.0.2",
-		"typescript": "^5.1.6",
+		"typescript": "^5.2.2",
 		"undici": "^5.23.0"
 	}
 }
