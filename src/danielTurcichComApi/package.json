@@ -10,8 +10,8 @@
 	},
 	"type": "module",
 	"scripts": {
-		"serve": "bun build && bun execute",
-		"build": "parcel build",
+		"serve": "bun build:parcel && bun execute",
+		"build:parcel": "parcel build",
 		"execute": "node ./dist/index.js"
 	},
 	"dependencies": {
