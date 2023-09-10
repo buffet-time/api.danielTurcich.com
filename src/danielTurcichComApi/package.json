@@ -12,7 +12,7 @@
 	"scripts": {
 		"serve": "bun build:parcel && bun execute",
 		"build:parcel": "parcel build",
-		"execute": "node ./dist/index.js"
+		"execute": "bun ./dist/index.js"
 	},
 	"dependencies": {
 		"@fastify/cors": "^8.1.0",
