@@ -17,7 +17,7 @@ const port = 2080
 await fastify.register(FastifyCors)
 
 let releasesArray: string[][]
-let statsObject: StatsObject
+let cachedStatsObject: StatsObject
 let cachedSpreadsheetCurrentYear: string[][]
 
 async function getSheets(
@@ -30,21 +30,17 @@ async function getSheets(
 	switch (true) {
 		// prettier-ignore
 		case (rows === 'true' && nonMusic === 'true'):
-			console.log(2)
 				return await getNumberOfRows(id, range, true)
 		// prettier-ignore
 		case (rows === 'true'): 
-						console.log(3)
 				return await getNumberOfRows(id, range)
 
 		// prettier-ignore
 		case (index && index >= 0):
 			
-		console.log(4)
 				return await getRows(id, range, index)
 
 		default:
-			console.log(5)
 			return await getRows(id, range)
 	}
 }
@@ -67,8 +63,6 @@ fastify.get('/Sheets', async (request, reply) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const nonMusic: string | undefined = request.query.nonmusic
 
-		console.log(1, id, range, index, rows, nonMusic)
-
 		await reply.send(await getSheets(id, range, index, rows, nonMusic))
 	} catch (error: any) {
 		console.log(`Error in /Sheets request:\n ${error}`)
@@ -87,7 +81,7 @@ fastify.get('/Releases', async (_request, reply) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 fastify.get('/Stats', async (_request, reply) => {
 	try {
-		await reply.send(statsObject)
+		await reply.send(cachedStatsObject)
 	} catch (error: any) {
 		console.log(`Error in /Stats request:\n ${error}`)
 	}
@@ -98,12 +92,12 @@ async function start() {
 	try {
 		fastify.listen({ port: port }, (error) => {
 			if (error) {
-				console.log(error)
+				console.log('Error in fastify.listen()', error)
 			}
 		})
 		await onStart()
 	} catch (err) {
-		console.log(err)
+		console.log('Error in onstart', err)
 		fastify.log.error(err)
 		process.exit(1)
 	}
@@ -209,7 +203,7 @@ async function initializeSheets() {
 			: releasePerYear[ReleasesIn['1950s']]++
 	})
 
-	statsObject = {
+	cachedStatsObject = {
 		averageScore: (tempScore / scoreCount).toFixed(2),
 		numberOfArtists: artistArray.length,
 		averageYear: (tempYear / yearCount).toFixed(2),

@@ -40,7 +40,6 @@ export async function getRows(
 	range: string,
 	index?: number
 ): Promise<string[][]> {
-	console.log(10, spreadsheetId, range)
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
@@ -75,7 +74,6 @@ export async function getNumberOfRows(
 			(_err: any, res: any) => {
 				if (res?.data.values) {
 					for (let n = res.data.values.length - 1; n > 0; n--) {
-						// TODO: ENHANCE THIS TO ALLOW THE BOT TO USE THINGS BESIDES MUSIC HERE
 						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
 							resolve(n + 1)
 						}
