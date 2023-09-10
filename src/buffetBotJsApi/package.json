@@ -10,9 +10,9 @@
 	},
 	"type": "module",
 	"scripts": {
-		"serve": "bun build && bun execute",
-		"build": "parcel build",
-		"execute": "node ./dist/index.js"
+		"serve": "bun build:parcel && bun execute",
+		"build:parcel": "parcel build",
+		"execute": "bun ./dist/index.js"
 	},
 	"dependencies": {
 		"fastify": "^4.9.2"
