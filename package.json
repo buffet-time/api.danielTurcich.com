@@ -14,16 +14,16 @@
 		"pnpm": "^8.1.0"
 	},
 	"scripts": {
-		"bot:serve": "cd ./src/buffetBotJsApi/ && pnpm serve",
-		"website:serve": "cd ./src/danielTurcichComApi/ && pnpm serve",
+		"bot:serve": "cd ./src/buffetBotJsApi/ && bun serve",
+		"website:serve": "cd ./src/danielTurcichComApi/ && bun serve",
 		"lint-check-1": "eslint \"**/**/*.ts\" && echo lint-check done",
 		"lint-check": "echo re-implement",
 		"format-check-1": "prettier --check \"**/**\" && echo format-check done",
 		"format-check": "echo re-implement",
-		"bot:build": "cd ./src/buffetBotJsApi/ && pnpm build",
-		"website:build": "cd ./src/danielTurcichComApi/ && pnpm build",
-		"build-checks": "pnpm bot:build && pnpm website:build",
-		"checks": "pnpm lint-check && pnpm format-check && pnpm build-checks",
+		"bot:build": "cd ./src/buffetBotJsApi/ && bun build",
+		"website:build": "cd ./src/danielTurcichComApi/ && bun build",
+		"build-checks": "pnpm bot:build && bun website:build",
+		"checks": "bun lint-check && bun format-check && bun build-checks",
 		"prepare": "husky install"
 	},
 	"dependencies": {

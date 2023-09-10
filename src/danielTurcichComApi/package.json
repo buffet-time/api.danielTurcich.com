@@ -10,7 +10,7 @@
 	},
 	"type": "module",
 	"scripts": {
-		"serve": "pnpm build && pnpm execute",
+		"serve": "bun build && bun execute",
 		"build": "parcel build",
 		"execute": "node ./dist/index.js"
 	},
