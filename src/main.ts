@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import path from 'path'
 import Fastify from 'fastify'
-// @ts-expect-error-
 import FastifyCors from '@fastify/cors'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from './supplemental/googleApis.js'

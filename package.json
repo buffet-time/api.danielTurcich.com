@@ -14,7 +14,7 @@
 		"pnpm": "^8.1.0"
 	},
 	"scripts": {
-		"build": "bun build ./src/main.ts --outdir ./src/dist",
+		"build": "bun build ./src/main.ts --outdir ./src/dist --target bun",
 		"website:serve": "cd ./src/ && bun serve",
 		"lint-check-1": "eslint \"**/**/*.ts\" && echo lint-check done",
 		"lint-check": "echo re-implement",
@@ -34,7 +34,6 @@
 		"googleapis": "^122.0.0"
 	},
 	"devDependencies": {
-		"@types/node": "^20.5.6",
 		"@types/request": "^2.48.8",
 		"@typescript-eslint/eslint-plugin": "^6.4.1",
 		"@typescript-eslint/parser": "^6.4.1",
