@@ -122,7 +122,7 @@ async function onStart() {
 		console.log('onstart')
 		const sheetsTokenPath = path.join(
 			process.cwd(),
-			'./credentials/sheetsToken.json'
+			'../src/credentials/sheetsToken.json'
 		)
 		const sheetsScopes = [
 			'https://www.googleapis.com/auth/spreadsheets.readonly'
