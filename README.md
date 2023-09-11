@@ -6,8 +6,8 @@ Running on an ubuntu server managed through [Caddy](https://caddyserver.com/) an
 
 // For my own purposes to reference when i inevitably forget :)
 
-pm2 start "pnpm bot:serve" --name buffetBotApi
-pm2 start "pnpm website:serve" --name personalWebsiteApi
+pm2 start "bun bot:serve" --name buffetBotApi
+pm2 start "bun website:serve" --name personalWebsiteApi
 
 /etc/caddy/Caddyfile
 sudo nano
