@@ -1,19 +1,27 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import path from 'path'
 import Fastify from 'fastify'
+// @ts-expect-error-
 import FastifyCors from '@fastify/cors'
 import { google, sheets_v4 } from 'googleapis'
-import { authorize } from '../shared/googleApis'
-import { Release, ReleasesIn, type StatsObject } from '../types/typings'
-import { getNumberOfRows, getRows, isNum, spreadsheets } from './supplemental'
+import { authorize } from './supplemental/googleApis.js'
+import { Release, ReleasesIn, type StatsObject } from './types/typings.js'
+import {
+	getNumberOfRows,
+	getRows,
+	isNum,
+	spreadsheets
+} from './supplemental/supplemental.js'
 
 export let sheets: sheets_v4.Sheets
 
 // FAstify/ etc setup
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const fastify = Fastify()
 const port = 2080
-// @ts-expect-error
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 await fastify.register(FastifyCors)
 
 let releasesArray: string[][]
@@ -45,6 +53,7 @@ async function getSheets(
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 fastify.get('/Sheets', async (request, reply) => {
 	try {
 		// @ts-expect-error
@@ -63,24 +72,27 @@ fastify.get('/Sheets', async (request, reply) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const nonMusic: string | undefined = request.query.nonmusic
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		await reply.send(await getSheets(id, range, index, rows, nonMusic))
 	} catch (error: any) {
 		console.log(`Error in /Sheets request:\n ${error}`)
 	}
 })
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-call
 fastify.get('/Releases', async (_request, reply) => {
 	try {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		await reply.send(releasesArray)
 	} catch (error: any) {
 		console.log(`Error in /Releases request:\n ${error}`)
 	}
 })
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-unsafe-call
 fastify.get('/Stats', async (_request, reply) => {
 	try {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		await reply.send(cachedStatsObject)
 	} catch (error: any) {
 		console.log(`Error in /Stats request:\n ${error}`)
@@ -90,6 +102,7 @@ fastify.get('/Stats', async (_request, reply) => {
 // Run the server!
 async function start() {
 	try {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		fastify.listen({ port: port }, (error) => {
 			if (error) {
 				console.log('Error in fastify.listen()', error)
@@ -98,6 +111,7 @@ async function start() {
 		await onStart()
 	} catch (err) {
 		console.log('Error in onstart', err)
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		fastify.log.error(err)
 		process.exit(1)
 	}
@@ -133,6 +147,7 @@ async function onStart() {
 async function initializeSheets() {
 	const spreadsheetArrays = await Promise.all(
 		spreadsheets.map((current) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			return getSheets(current.id, current.range) as unknown as string[][]
 		})
 	)
@@ -218,9 +233,12 @@ async function initializeSheets() {
 function setupIntervals() {
 	setInterval(() => {
 		async function checkLatestSpreadsheet() {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const params = spreadsheets.at(-1)!
 			const retrievedSpreadsheetCurrentYear = await getSheets(
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				params.id,
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				params.range
 			)
 			if (retrievedSpreadsheetCurrentYear !== cachedSpreadsheetCurrentYear) {

@@ -2,7 +2,7 @@
 	"name": "danielturichdotcomapi",
 	"version": "1.0.0",
 	"private": false,
-	"description": "Monorepo containing my website and discord bots APIs",
+	"description": "API for danielTurcich.com",
 	"author": {
 		"email": "packagejson@danielTurcich.com",
 		"name": "Daniel Turcich",
@@ -14,14 +14,13 @@
 		"pnpm": "^8.1.0"
 	},
 	"scripts": {
-		"bot:serve": "cd ./src/buffetBotJsApi/ && bun serve",
-		"website:serve": "cd ./src/danielTurcichComApi/ && bun serve",
+		"build": "bun build ./src/main.ts --outdir ./src/dist",
+		"website:serve": "cd ./src/ && bun serve",
 		"lint-check-1": "eslint \"**/**/*.ts\" && echo lint-check done",
 		"lint-check": "echo re-implement",
 		"format-check-1": "prettier --check \"**/**\" && echo format-check done",
 		"format-check": "echo re-implement",
-		"bot:build": "cd ./src/buffetBotJsApi/ && bun build",
-		"website:build": "cd ./src/danielTurcichComApi/ && bun build",
+		"website:build": "cd ./src/ && bun build",
 		"build-checks": "pnpm bot:build && bun website:build",
 		"checks": "bun lint-check && bun format-check && bun build-checks",
 		"prepare": "husky install"
@@ -44,9 +43,8 @@
 		"eslint-plugin-prettier": "^5.0.0",
 		"googleapis-common": "^6.0.4",
 		"husky": "^8.0.3",
-		"parcel": "^2.9.3",
 		"prettier": "^3.0.2",
-		"typescript": "^5.2.2",
+		"typescript": "5.0.4",
 		"undici": "^5.23.0"
 	}
 }

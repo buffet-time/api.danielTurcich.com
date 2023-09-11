@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Release, type SpreadsheetParams } from '../types/typings'
-import { sheets } from './main'
+import { sheets } from '../main'
 
 // TODO: find a better way so i can be lazier at the beginning of the year :)
 export const spreadsheets: SpreadsheetParams[] = [
@@ -41,6 +41,7 @@ export async function getRows(
 	index?: number
 ): Promise<string[][]> {
 	return new Promise((resolve) =>
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
 		sheets.spreadsheets.values.get(
 			{
 				spreadsheetId: spreadsheetId,
@@ -66,6 +67,7 @@ export async function getNumberOfRows(
 	nonMusic?: boolean
 ): Promise<number> {
 	return new Promise((resolve) =>
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
 		sheets.spreadsheets.values.get(
 			{
 				spreadsheetId: spreadsheetId,
