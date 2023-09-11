@@ -9,7 +9,7 @@ import type { OAuth2Client } from 'googleapis-common'
 
 const credentialsPath = path.join(
 	process.cwd(),
-	'../supplemental/googleCreds.json'
+	'./supplemental/googleCreds.json'
 )
 
 export async function authorize({
