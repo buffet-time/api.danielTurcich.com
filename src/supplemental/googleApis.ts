@@ -7,7 +7,10 @@ import type { OAuth2Client } from 'googleapis-common'
 // If modifying these scopes, delete token.json.
 // const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-const credentialsPath = path.join(process.cwd(), '../shared/googleCreds.json')
+const credentialsPath = path.join(
+	process.cwd(),
+	'../supplemental/googleCreds.json'
+)
 
 export async function authorize({
 	scopes,
