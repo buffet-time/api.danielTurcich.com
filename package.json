@@ -14,7 +14,7 @@
 		"pnpm": "^8.1.0"
 	},
 	"scripts": {
-		"build": "bun build ./src/main.ts --outdir ./src/dist --target bun",
+		"build": "bun build ./src/main.ts --outdir ./build --target bun",
 		"website:serve": "cd ./src/ && bun serve",
 		"lint-check-1": "eslint \"**/**/*.ts\" && echo lint-check done",
 		"lint-check": "echo re-implement",
