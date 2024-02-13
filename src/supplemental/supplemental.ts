@@ -47,14 +47,10 @@ export async function getRows(
 				range: range
 			},
 			(error: any, response: any) => {
-				console.log(1)
 				if (error || !response?.data.values) {
 					console.log(`Error in getRows():\n ${error}`)
 					resolve([])
 				}
-				console.log(2, index)
-
-				console.log(index)
 
 				try {
 
