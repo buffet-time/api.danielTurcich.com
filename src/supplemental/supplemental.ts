@@ -37,7 +37,7 @@ export function isNum(value: string) {
 export async function getRows(
 	spreadsheetId: string,
 	range: string,
-	index?: number
+	index?: string
 ): Promise<string[][]> {
 	return new Promise((resolve) =>
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
@@ -47,17 +47,19 @@ export async function getRows(
 				range: range
 			},
 			(error: any, response: any) => {
+				console.log(1)
 				if (error || !response?.data.values) {
 					console.log(`Error in getRows():\n ${error}`)
 					resolve([])
 				}
+				console.log(2, index)
 
 				console.log(index)
 
 				try {
 
-					if(index || index === 0) {
-						resolve(response.data.values[index]) 
+					if(index) {
+						resolve(response.data.values[Number(index)]) 
 						return
 					}
 

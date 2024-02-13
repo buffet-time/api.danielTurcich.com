@@ -30,7 +30,7 @@ let cachedSpreadsheetCurrentYear: string[][]
 async function getSheets(
 	id: string,
 	range: string,
-	index?: number,
+	index?: string,
 	rows?: string,
 	nonMusic?: string
 ) {
@@ -43,9 +43,8 @@ async function getSheets(
 				return await getNumberOfRows(id, range)
 
 		// prettier-ignore
-		case (index && index >= 0):
-			
-				return await getRows(id, range, index)
+		case (Boolean(index)):
+				return await getRows(id, range, index!)
 
 		default:
 			return await getRows(id, range)
@@ -66,7 +65,7 @@ fastify.get('/Sheets', async (request, reply) => {
 		const range: string = request.query.range
 		// @ts-expect-error
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		const index: number | undefined = Number(request.query.index)
+		const index: string | undefined = request.query.index
 		// @ts-expect-error
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const rows: string | undefined = request.query.rows
