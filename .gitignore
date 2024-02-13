@@ -5,6 +5,7 @@ credentials
 # Parcel
 .parcel-cache
 dist
+build
 
 # pnpm
 .pnpm-debug.log
