@@ -55,6 +55,9 @@ async function getSheets(
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 fastify.get('/Sheets', async (request, reply) => {
 	try {
+
+		console.log(100, request.query)
+
 		// @ts-expect-error
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const id: string = request.query.id
@@ -70,6 +73,7 @@ fastify.get('/Sheets', async (request, reply) => {
 		// @ts-expect-error
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const nonMusic: string | undefined = request.query.nonmusic
+
 
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		await reply.send(await getSheets(id, range, index, rows, nonMusic))
