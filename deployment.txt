@@ -1,8 +1,0 @@
-For my own usage :)
-
-Server: Caddy
-Editor: Nano
-Process Management: PM2
-Package Mangament JS: PNPM
-
-pm2 start "cd APIs && pnpm website:serve" --name websiteApi

@@ -3,11 +3,10 @@ import path from 'path'
 import { authenticate } from '@google-cloud/local-auth'
 import { google } from 'googleapis'
 import type { OAuth2Client } from 'googleapis-common'
+import type { GoogleCredentials } from '../types/googleTypes'
 
 // If modifying these scopes, delete token.json.
 // const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
-console.log(1, process.cwd())
 const credentialsPath = path.join(
 	process.cwd(),
 	'../src/supplemental/googleCreds.json'
@@ -37,6 +36,7 @@ export async function authorize({
 
 	return client
 
+	// This works fine, and i don't mind having a few eslinnt disables here :)
 	// Reads previously authorized credentials from the save file.
 	async function loadSavedCredentialsIfExist() {
 		try {
@@ -54,16 +54,12 @@ export async function authorize({
 	// Serializes credentials to a file comptible with GoogleAUth.fromJSON.
 	async function saveCredentials() {
 		const content = await filesystem.readFile(credentialsPath)
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		const keys = JSON.parse(content.toString())
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+		const keys = JSON.parse(content.toString()) as GoogleCredentials
 		const key = keys.installed || keys.web
 
 		const payload = JSON.stringify({
 			type: 'authorized_user',
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 			client_id: key.client_id,
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 			client_secret: key.client_secret,
 			refresh_token: client?.credentials.refresh_token
 		})

@@ -1,12 +1,11 @@
-# multi directories
-**/*/node_modules
-**/*/dist
-
 # directories
 /.vscode
 /.husky
 /.github
 /.parcel-cache
+/build
+/dist
+/node_modules
 
 # singular files
 .prettierignore
@@ -17,6 +16,8 @@ LICENSE
 .nvmrc
 .pnpmrc
 ignore.*
+Caddyfile
+pnpm-lock.yaml
 
 # file types
 *.log

@@ -1,8 +1,3 @@
-// TODO: this is incredibly fragile code...
-
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Release, type SpreadsheetParams } from '../types/typings'
 import { sheets } from '../main'
 
@@ -27,6 +22,10 @@ export const spreadsheets: SpreadsheetParams[] = [
 	{
 		id: '1kbSckEbjlI55bCds6qB0bE4h2osHJjbTzXfFoBHnqQA',
 		range: 'Main!A2:G' // 2023
+	},
+	{
+		id: '1c2LLIH5e7voXgWQ_tiJKrDhx14VVevPEdmi6Yv1AE84',
+		range: 'Main!A2:G' // 2024
 	}
 ]
 
@@ -34,37 +33,32 @@ export const spreadsheets: SpreadsheetParams[] = [
 export function isNum(value: string) {
 	return !isNaN(Number(value))
 }
+
 export async function getRows(
 	spreadsheetId: string,
 	range: string,
 	index?: string
-): Promise<string[][]> {
+): Promise<string[][] | string[]> {
 	return new Promise((resolve) =>
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
 		sheets.spreadsheets.values.get(
 			{
 				spreadsheetId: spreadsheetId,
 				range: range
 			},
-			(error: any, response: any) => {
-				if (error || !response?.data.values) {
-					console.log(`Error in getRows():\n ${error}`)
-					resolve([])
+			(error, response) => {
+				if (error ?? !response?.data.values) {
+					return console.log(`Error in getRows():\n ${error as any}`)
 				}
 
 				try {
-
-					if(index) {
-						resolve(response.data.values[Number(index)]) 
-						return
+					if (index) {
+						return resolve(response.data.values[Number(index)])
 					}
 
 					resolve(response.data.values)
-
-				} catch (error) {
+				} catch (error: any) {
 					console.log(`blargh i need to update my bad old code: ${error}`)
 				}
-
 			}
 		)
 	)
@@ -75,19 +69,28 @@ export async function getNumberOfRows(
 	nonMusic?: boolean
 ): Promise<number> {
 	return new Promise((resolve) =>
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
 		sheets.spreadsheets.values.get(
 			{
 				spreadsheetId: spreadsheetId,
 				range: range
 			},
-			(_err: any, res: any) => {
-				if (res?.data.values) {
-					for (let n = res.data.values.length - 1; n > 0; n--) {
-						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
-							resolve(n + 1)
+			(error, response) => {
+				try {
+					if (error ?? !response?.data.values) {
+						return console.log(`Error in getNumberOfRows():\n ${error as any}`)
+					}
+
+					if (response?.data.values) {
+						for (let n = response.data.values.length - 1; n > 0; n--) {
+							if (
+								rowIsFilledOut(response.data.values[n] as string[], nonMusic)
+							) {
+								resolve(n + 1)
+							}
 						}
 					}
+				} catch (error: any) {
+					console.log(`blargh i need to update my bad old code: ${error}`)
 				}
 			}
 		)
