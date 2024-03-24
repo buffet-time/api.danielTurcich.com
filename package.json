@@ -16,7 +16,7 @@
 	"source": "src/main.ts",
 	"module": "dist/module.js",
 	"scripts": {
-		"serve": "pnpm build",
+		"serve": "pnpm build && pnpm start",
 		"start": "node ./dist/module.js",
 		"build": "parcel build",
 		"lint-check": "eslint \"**/**/*.ts\" && echo lint-check done",

@@ -1,8 +1,7 @@
-// TODO: this is incredibly fragile code...
-
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+// TODO: this is incredibly fragile code...
+
 import { Release, type SpreadsheetParams } from '../types/typings'
 import { sheets } from '../main'
 
@@ -40,13 +39,13 @@ export async function getRows(
 	index?: string
 ): Promise<string[][]> {
 	return new Promise((resolve) =>
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
 		sheets.spreadsheets.values.get(
 			{
 				spreadsheetId: spreadsheetId,
 				range: range
 			},
 			(error: any, response: any) => {
+				console.log(10, response)
 				if (error || !response?.data.values) {
 					console.log(`Error in getRows():\n ${error}`)
 					resolve([])
@@ -54,11 +53,11 @@ export async function getRows(
 
 				try {
 					if (index) {
-						resolve(response.data.values[Number(index)])
+						resolve(response.data.values[Number(index)] as string[][])
 						return
 					}
 
-					resolve(response.data.values)
+					resolve(response.data.values as string[][])
 				} catch (error: any) {
 					console.log(`blargh i need to update my bad old code: ${error}`)
 				}
@@ -78,10 +77,10 @@ export async function getNumberOfRows(
 				spreadsheetId: spreadsheetId,
 				range: range
 			},
-			(_err: any, res: any) => {
-				if (res?.data.values) {
-					for (let n = res.data.values.length - 1; n > 0; n--) {
-						if (rowIsFilledOut(res.data.values[n], nonMusic)) {
+			(_err: any, response: any) => {
+				if (response?.data.values) {
+					for (let n = response.data.values.length - 1; n > 0; n--) {
+						if (rowIsFilledOut(response.data.values[n], nonMusic)) {
 							resolve(n + 1)
 						}
 					}
