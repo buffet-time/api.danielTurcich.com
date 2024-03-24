@@ -13,21 +13,14 @@ export async function ProperFetch(
 	init?: RequestInit | undefined
 ): Promise<any> {
 	try {
-		console.log(100, input)
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const response = init ? await fetch(input, init) : await fetch(input)
-
-		// console.log(101, response)
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-		console.log(await response.text())
 
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		if (response.ok) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 			return await response.json()
 		}
-
-		// if (response.)
 
 		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 		console.error('Responded with an error:' + (await response.json()))

@@ -53,18 +53,15 @@ export async function getRows(
 				}
 
 				try {
-
-					if(index) {
-						resolve(response.data.values[Number(index)]) 
+					if (index) {
+						resolve(response.data.values[Number(index)])
 						return
 					}
 
 					resolve(response.data.values)
-
-				} catch (error) {
+				} catch (error: any) {
 					console.log(`blargh i need to update my bad old code: ${error}`)
 				}
-
 			}
 		)
 	)

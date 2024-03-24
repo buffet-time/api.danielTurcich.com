@@ -1,4 +1,4 @@
-## APIs
+# APIs
 
 API for my Website, my DiscordBot, and some various others will be added in misc over time.
 

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import path from 'path'
 import Fastify from 'fastify'
-import FastifyCors from '@fastify/cors'
+import cors from '@fastify/cors'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from './supplemental/googleApis.js'
 import { Release, ReleasesIn, type StatsObject } from './types/typings.js'
@@ -21,7 +21,7 @@ export let sheets: sheets_v4.Sheets
 const fastify = Fastify()
 const port = 2080
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-await fastify.register(FastifyCors)
+await fastify.register(cors)
 
 let releasesArray: string[][]
 let cachedStatsObject: StatsObject
@@ -44,7 +44,7 @@ async function getSheets(
 
 		// prettier-ignore
 		case (Boolean(index)):
-				return await getRows(id, range, index!)
+				return await getRows(id, range, index)
 
 		default:
 			return await getRows(id, range)
@@ -69,7 +69,6 @@ fastify.get('/Sheets', async (request, reply) => {
 		// @ts-expect-error
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const nonMusic: string | undefined = request.query.nonmusic
-
 
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		await reply.send(await getSheets(id, range, index, rows, nonMusic))
@@ -211,9 +210,9 @@ async function initializeSheets() {
 
 		curYear > 1959
 			? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			  // @ts-expect-error
-			  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-			  releasePerYear[ReleasesIn[current[Release.year].slice(0, 3) + '0s']]++
+				// @ts-expect-error
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+				releasePerYear[ReleasesIn[current[Release.year].slice(0, 3) + '0s']]++
 			: releasePerYear[ReleasesIn['1950s']]++
 	})
 
