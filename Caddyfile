@@ -2,12 +2,3 @@
 api.danielturcich.com {
         reverse_proxy localhost:2080
 }
-
-botapi.danielturcich.com {
-        reverse_proxy localhost:1080
-}
-
-api.musicchartmaker.com {
-        reverse_proxy localhost:3030
-}
-
