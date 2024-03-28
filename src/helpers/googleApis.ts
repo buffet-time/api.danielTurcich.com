@@ -9,7 +9,7 @@ import type { GoogleCredentials } from '../types/googleTypes'
 // const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 const credentialsPath = path.join(
 	process.cwd(),
-	'../src/supplemental/googleCreds.json'
+	'../src/credentials/googleCreds.json'
 )
 
 export async function authorize({
