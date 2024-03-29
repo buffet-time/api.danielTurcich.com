@@ -2,7 +2,12 @@ import path from 'path'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from './helpers/googleApis.js'
 import HyperExpress from 'hyper-express'
-import { getSheets, initializeSheets, setupIntervals } from './helpers/main.js'
+import {
+	getSheets,
+	initializeSheets,
+	setupIntervals
+} from './helpers/main.helpers.js'
+import Cors from 'cors'
 
 let releasesArray: string
 let cachedStatsObject: string
@@ -78,6 +83,7 @@ hyperExpress.get('/Sheets', async (request, response) => {
 })
 
 hyperExpress
+	.use(Cors())
 	.listen(port)
 	.then(async () => {
 		await onStart()

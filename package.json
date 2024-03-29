@@ -27,11 +27,13 @@
 	},
 	"dependencies": {
 		"@google-cloud/local-auth": "^3.0.1",
+		"cors": "^2.8.5",
 		"google-auth-library": "^9.7.0",
 		"googleapis": "^134.0.0",
 		"hyper-express": "^6.15.0"
 	},
 	"devDependencies": {
+		"@types/cors": "^2.8.17",
 		"@types/node": "^20.11.30",
 		"@typescript-eslint/eslint-plugin": "^7.4.0",
 		"@typescript-eslint/parser": "^7.4.0",
