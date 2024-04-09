@@ -1,5 +1,6 @@
 import { Release, type SpreadsheetParams } from '../types/typings'
 import { sheets } from '../main'
+import { getCurrentDate } from './main.helpers'
 
 // TODO: find a better way so i can be lazier at the beginning of the year :)
 export const spreadsheets: SpreadsheetParams[] = [
@@ -33,7 +34,7 @@ export async function getRows(
 	spreadsheetId: string,
 	range: string,
 	index?: string
-): Promise<string[][] | string[] | string> {
+): Promise<string[][] | string[] | string | null> {
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
@@ -42,7 +43,10 @@ export async function getRows(
 			},
 			(error, response) => {
 				if (error ?? !response?.data.values) {
-					resolve(`Error in getRows():\n ${error as any}`)
+					console.log(
+						`Error in getRows():\n ${error as any} ~ ${getCurrentDate()}`
+					)
+					resolve(null)
 					return
 				}
 
@@ -54,7 +58,10 @@ export async function getRows(
 
 					resolve(response.data.values)
 				} catch (error: any) {
-					console.log(`blargh i need to update my bad old code: ${error}`)
+					console.log(
+						`blargh i need to update my bad old code: ${error} ~ ${getCurrentDate()}`
+					)
+					resolve(null)
 				}
 			}
 		)

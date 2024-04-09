@@ -3,6 +3,7 @@ import { google, sheets_v4 } from 'googleapis'
 import { authorize } from './helpers/googleApis.js'
 import HyperExpress from 'hyper-express'
 import {
+	getCurrentDate,
 	getSheets,
 	initializeSheets,
 	setupIntervals
@@ -70,9 +71,15 @@ hyperExpress.get('/Sheets', async (request, response) => {
 			return
 		}
 
-		response.send(
-			JSON.stringify(await getSheets(id, range, index, rows, nonMusic))
-		)
+		const sheetsReturn = await getSheets(id, range, index, rows, nonMusic)
+
+		if (sheetsReturn === null) {
+			response.send(
+				`Rut ro... What happened in /sheets?: ${id}, ${range}, ${index}, ${rows}, ${nonMusic}, ${sheetsReturn} ~ ${getCurrentDate()}`
+			)
+		}
+
+		response.send(JSON.stringify(sheetsReturn))
 	} catch (error: any) {
 		response
 			.status(418)
@@ -87,11 +94,15 @@ hyperExpress
 	.listen(port)
 	.then(async () => {
 		await onStart()
-		console.log(`Hyper-Express server listening on port: ${port}`)
+		console.log(
+			`Hyper-Express server listening on port: ${port} ~ ${getCurrentDate()}`
+		)
 	})
-	.catch((error: any) =>
-		console.log(`Failed to start webserver on port ${port}: Error - ${error}`)
-	)
+	.catch((error: any) => {
+		console.log(
+			`Failed to start Hyper-Express server on port ${port}: Error - ${error} ~ ${getCurrentDate()}`
+		)
+	})
 
 async function onStart() {
 	try {
@@ -109,7 +120,7 @@ async function onStart() {
 		})
 		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient })
 	} catch (error: any) {
-		throw console.log(`Error in onStart(): ${error}`)
+		throw console.log(`Error in onStart(): ${error} ~ ${getCurrentDate()}`)
 	}
 
 	await initializeSheets()

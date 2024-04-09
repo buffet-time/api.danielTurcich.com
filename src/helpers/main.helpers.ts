@@ -11,19 +11,21 @@ export function isNum(value: string) {
 
 // Checks every 30 minutes to update the cached spreadsheets
 export function setupIntervals() {
-	setInterval(() => {
-		async function checkLatestSpreadsheet() {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			const params = spreadsheets.at(-1)!
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			const retrievedSpreadsheetCurrentYear = await getSheets(
-				params.id,
-				params.range
-			)
-			if (retrievedSpreadsheetCurrentYear !== cachedSpreadsheetCurrentYear) {
-				await initializeSheets()
-			}
+	async function checkLatestSpreadsheet() {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		const params = spreadsheets.at(-1)!
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+		const retrievedSpreadsheetCurrentYear = await getSheets(
+			params.id,
+			params.range
+		)
+
+		if (retrievedSpreadsheetCurrentYear !== cachedSpreadsheetCurrentYear) {
+			await initializeSheets()
 		}
+	}
+
+	setInterval(() => {
 		void checkLatestSpreadsheet()
 	}, 1_800_000)
 }
@@ -137,4 +139,9 @@ export async function getSheets(
 		default:
 			return await getRows(id, range)
 	}
+}
+
+export function getCurrentDate() {
+	const currentTime = new Date(Date.now()).toString()
+	return `The time is: ${currentTime}`
 }
