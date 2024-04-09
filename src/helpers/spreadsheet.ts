@@ -1,5 +1,6 @@
 import { Release, type SpreadsheetParams } from '../types/typings'
 import { sheets } from '../main'
+import { getCurrentDate } from './main.helpers'
 
 // TODO: find a better way so i can be lazier at the beginning of the year :)
 export const spreadsheets: SpreadsheetParams[] = [
@@ -29,16 +30,11 @@ export const spreadsheets: SpreadsheetParams[] = [
 	}
 ]
 
-// for readability
-export function isNum(value: string) {
-	return !isNaN(Number(value))
-}
-
 export async function getRows(
 	spreadsheetId: string,
 	range: string,
 	index?: string
-): Promise<string[][] | string[]> {
+): Promise<string[][] | string[] | string | null> {
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
@@ -47,27 +43,36 @@ export async function getRows(
 			},
 			(error, response) => {
 				if (error ?? !response?.data.values) {
-					return console.log(`Error in getRows():\n ${error as any}`)
+					console.log(
+						`Error in getRows():\n ${error as any} ~ ${getCurrentDate()}`
+					)
+					resolve(null)
+					return
 				}
 
 				try {
 					if (index) {
-						return resolve(response.data.values[Number(index)])
+						resolve(response.data.values[Number(index)])
+						return
 					}
 
 					resolve(response.data.values)
 				} catch (error: any) {
-					console.log(`blargh i need to update my bad old code: ${error}`)
+					console.log(
+						`blargh i need to update my bad old code: ${error} ~ ${getCurrentDate()}`
+					)
+					resolve(null)
 				}
 			}
 		)
 	)
 }
+
 export async function getNumberOfRows(
 	spreadsheetId: string,
 	range: string,
 	nonMusic?: boolean
-): Promise<number> {
+): Promise<number | string> {
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
@@ -77,7 +82,8 @@ export async function getNumberOfRows(
 			(error, response) => {
 				try {
 					if (error ?? !response?.data.values) {
-						return console.log(`Error in getNumberOfRows():\n ${error as any}`)
+						resolve(`Error in getNumberOfRows():\n ${error as any}`)
+						return
 					}
 
 					if (response?.data.values) {
