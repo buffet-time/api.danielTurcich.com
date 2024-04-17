@@ -105,11 +105,11 @@ hyperExpress.get('/Asset', (request, response) => {
 
 		switch (fileName) {
 			case 'croc':
-				response.file(path.join(__dirname, '../dist/croc.mp4'))
+				response.file(path.join(__dirname, 'croc.mp4'))
 				break
 
 			case 'gary':
-				response.file(path.join(__dirname, '../dist/gary.png'))
+				response.file(path.join(__dirname, 'gary.png'))
 				break
 
 			default:
