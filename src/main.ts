@@ -89,6 +89,37 @@ hyperExpress.get('/Sheets', async (request, response) => {
 	}
 })
 
+hyperExpress.get('/Asset', (request, response) => {
+	try {
+		const fileName = request.query.fileName
+
+		if (!fileName || typeof fileName !== 'string') {
+			response.status(418).send(`invalid file name :/`)
+			return
+		}
+
+		switch (fileName) {
+			case 'croc':
+				response.sendFile('./croc.mp4')
+				break
+
+			case 'gary':
+				response.sendFile('./gary.png')
+				break
+
+			default:
+				response.status(418).send(`invalid file name :/`)
+				break
+		}
+	} catch (error: any) {
+		response
+			.status(418)
+			.send(
+				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
+			)
+	}
+})
+
 hyperExpress
 	.use(Cors())
 	.listen(port)
