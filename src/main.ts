@@ -10,6 +10,11 @@ import {
 } from './helpers/main.helpers.js'
 import Cors from 'cors'
 
+import { dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 let releasesArray: string
 let cachedStatsObject: string
 
