@@ -100,11 +100,11 @@ hyperExpress.get('/Asset', (request, response) => {
 
 		switch (fileName) {
 			case 'croc':
-				response.sendFile('./croc.mp4')
+				response.sendFile('croc.mp4')
 				break
 
 			case 'gary':
-				response.sendFile('./gary.png')
+				response.sendFile('gary.png')
 				break
 
 			default:

@@ -8,6 +8,6 @@ Using PNPM, Parcel, and Fastify
 
 ## For my own purposes to reference when i inevitably forget :)
 
-`$ pm2 start "pnpm serve" --name buffetBotApi`
+`$ pm2 start "pnpm serve" --name api`
 
 `$ sudo nano /etc/caddy/Caddyfile`
