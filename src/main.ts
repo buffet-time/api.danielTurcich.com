@@ -8,12 +8,9 @@ import {
 	initializeSheets,
 	setupIntervals
 } from './helpers/main.helpers.js'
+
 import Cors from 'cors'
-
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
+import serveStatic from 'serve-static'
 
 let releasesArray: string
 let cachedStatsObject: string
@@ -94,36 +91,39 @@ hyperExpress.get('/Sheets', async (request, response) => {
 	}
 })
 
-hyperExpress.get('/Asset', (request, response) => {
-	try {
-		const fileName = request.query.fileName
+// hyperExpress.get('/Asset', (request, response) => {
+// 	try {
+// 		const fileName = request.query.fileName
 
-		if (!fileName || typeof fileName !== 'string') {
-			response.status(418).send(`invalid file name :/`)
-			return
-		}
+// 		if (!fileName || typeof fileName !== 'string') {
+// 			response.status(418).send(`invalid file name :/`)
+// 			return
+// 		}
 
-		switch (fileName) {
-			case 'croc':
-				response.file(path.join('croc.mp4'))
-				break
+// 		switch (fileName) {
+// 			case 'croc':
+// 				hyperExpress
+// 				response.file(path.join('croc.mp4'))
+// 				break
 
-			case 'gary':
-				response.sendFile(path.join('gary.png'))
-				break
+// 			case 'gary':
+// 				response.sendFile(path.join('gary.png'))
+// 				break
 
-			default:
-				response.status(418).send(`invalid file name :/`)
-				break
-		}
-	} catch (error: any) {
-		response
-			.status(418)
-			.send(
-				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
-			)
-	}
-})
+// 			default:
+// 				response.status(418).send(`invalid file name :/`)
+// 				break
+// 		}
+// 	} catch (error: any) {
+// 		response
+// 			.status(418)
+// 			.send(
+// 				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
+// 			)
+// 	}
+// })
+
+serveStatic('public')
 
 hyperExpress
 	.use(Cors())
