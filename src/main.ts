@@ -1,4 +1,4 @@
-import path from 'path'
+import { join as pathJoin } from 'path'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from './helpers/googleApis.js'
 import HyperExpress from 'hyper-express'
@@ -10,7 +10,6 @@ import {
 } from './helpers/main.helpers.js'
 
 import Cors from 'cors'
-import serveStatic from 'serve-static'
 
 let releasesArray: string
 let cachedStatsObject: string
@@ -91,39 +90,36 @@ hyperExpress.get('/Sheets', async (request, response) => {
 	}
 })
 
-// hyperExpress.get('/Asset', (request, response) => {
-// 	try {
-// 		const fileName = request.query.fileName
+hyperExpress.get('/Asset', (request, response) => {
+	try {
+		const fileName = request.query.fileName
 
-// 		if (!fileName || typeof fileName !== 'string') {
-// 			response.status(418).send(`invalid file name :/`)
-// 			return
-// 		}
+		if (!fileName || typeof fileName !== 'string') {
+			response.status(418).send(`invalid query param :/`)
+			return
+		}
 
-// 		switch (fileName) {
-// 			case 'croc':
-// 				hyperExpress
-// 				response.file(path.join('croc.mp4'))
-// 				break
+		switch (fileName) {
+			case 'croc':
+				response.file(pathJoin(process.cwd(), '/public/croc.mp4'))
+				break
 
-// 			case 'gary':
-// 				response.sendFile(path.join('gary.png'))
-// 				break
+			case 'gary':
+				response.file(pathJoin(process.cwd(), '/public/gary.png'))
+				break
 
-// 			default:
-// 				response.status(418).send(`invalid file name :/`)
-// 				break
-// 		}
-// 	} catch (error: any) {
-// 		response
-// 			.status(418)
-// 			.send(
-// 				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
-// 			)
-// 	}
-// })
-
-serveStatic('public')
+			default:
+				response.status(418).send(`invalid file name :/`)
+				break
+		}
+	} catch (error: any) {
+		response
+			.status(418)
+			.send(
+				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
+			)
+	}
+})
 
 hyperExpress
 	.use(Cors())
@@ -142,7 +138,7 @@ hyperExpress
 
 async function onStart() {
 	try {
-		const sheetsTokenPath = path.join(
+		const sheetsTokenPath = pathJoin(
 			process.cwd(),
 			'./src/credentials/sheetsToken.json'
 		)
