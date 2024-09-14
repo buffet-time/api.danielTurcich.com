@@ -82,7 +82,8 @@ export async function getNumberOfRows(
 			(error, response) => {
 				try {
 					if (error ?? !response?.data.values) {
-						resolve(`Error in getNumberOfRows():\n ${error as any}`)
+						// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+						resolve(`Error in getNumberOfRows():\n ${error}`)
 						return
 					}
 
