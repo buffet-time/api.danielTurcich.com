@@ -44,7 +44,7 @@ export async function getRows(
 			(error, response) => {
 				if (error ?? !response?.data.values) {
 					console.log(
-						`Error in getRows():\n ${error as any} ~ ${getCurrentDate()}`
+						`Error in getRows():\n ${error as any} ~ ${spreadsheetId} ${range} ${index} ~ ${getCurrentDate()}`
 					)
 					resolve(null)
 					return
