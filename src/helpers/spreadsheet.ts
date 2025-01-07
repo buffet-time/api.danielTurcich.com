@@ -27,6 +27,10 @@ export const spreadsheets: SpreadsheetParams[] = [
 	{
 		id: '1c2LLIH5e7voXgWQ_tiJKrDhx14VVevPEdmi6Yv1AE84',
 		range: 'Main!A2:G' // 2024
+	},
+	{
+		id: '1GFwmZwMiBBWvA6ZZx4M3ITRjrCDvF5tif15A0cfQhug',
+		range: 'Main!A2:G' // 2025
 	}
 ]
 
@@ -43,6 +47,9 @@ export async function getRows(
 			},
 			(error, response) => {
 				if (error ?? !response?.data.values) {
+					// 0|api      |  Error: Internal error encountered. ~ 1HP5u_A2j8YPBIyH5pU9kpOtaEPya Coordinated Universal Time)
+					// 0|api      | Error in getRows():
+					// 0|api      |  Error: Internal error encountered. ~ 1HP5u_A2j8YPBIyH5pU9kpOtaEPya Coordinated Universal Time)
 					console.log(
 						`Error in getRows():\n ${error as any} ~ ${spreadsheetId} ${range} ${index} ~ ${getCurrentDate()}`
 					)
