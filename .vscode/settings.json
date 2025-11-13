@@ -1,10 +1,6 @@
 {
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit"
-	},
-	"eslint.validate": ["javascript"],
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
 	"files.eol": "\n",
@@ -20,5 +16,6 @@
 		"**/node_modules": true,
 		"**/credentials": true
 	},
-	"typescript.tsdk": "node_modules\\typescript\\lib"
+	"typescript.tsdk": "node_modules\\typescript\\lib",
+	"oxc.enable": true
 }

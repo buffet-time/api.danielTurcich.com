@@ -1,7 +1,8 @@
 import { join as pathJoin } from 'path'
 import { google, sheets_v4 } from 'googleapis'
 import { authorize } from './helpers/googleApis.js'
-import HyperExpress from 'hyper-express'
+import Fastify from 'fastify'
+import fastifyCors from '@fastify/cors'
 import {
 	getCurrentDate,
 	getSheets,
@@ -9,13 +10,11 @@ import {
 	setupIntervals
 } from './helpers/main.helpers.js'
 
-import Cors from 'cors'
-
 let releasesArray: string
 let cachedStatsObject: string
 
 export let sheets: sheets_v4.Sheets
-export const port = 2080
+export const PORT = 2080
 
 export function setReleasesArray(newVal: string) {
 	releasesArray = newVal
@@ -25,9 +24,14 @@ export function setCachedStatsObject(newVal: string) {
 	cachedStatsObject = newVal
 }
 
-const hyperExpress = new HyperExpress.Server()
+const fastify = Fastify()
+await fastify.register(fastifyCors, {
+	origin: true,
+	methods: 'GET',
+	allowedHeaders: 'Content-Type, Authorization'
+})
 
-hyperExpress.get('/Releases', (_request, response) => {
+fastify.get('/Releases', (_request, response) => {
 	try {
 		response.send(releasesArray)
 	} catch (error: any) {
@@ -40,7 +44,7 @@ hyperExpress.get('/Releases', (_request, response) => {
 	}
 })
 
-hyperExpress.get('/Stats', (_request, response) => {
+fastify.get('/Stats', (_request, response) => {
 	try {
 		response.send(cachedStatsObject)
 	} catch (error: any) {
@@ -55,7 +59,7 @@ hyperExpress.get('/Stats', (_request, response) => {
 
 // example request:
 // http://localhost:2080/Sheets?id=1c2LLIH5e7voXgWQ_tiJKrDhx14VVevPEdmi6Yv1AE84&range=Main!A2:G
-hyperExpress.get('/Sheets', async (request, response) => {
+fastify.get('/Sheets', async (request: any, response) => {
 	try {
 		const id = request.query.id
 		const range = request.query.range as string
@@ -90,49 +94,17 @@ hyperExpress.get('/Sheets', async (request, response) => {
 	}
 })
 
-hyperExpress.get('/Asset', (request, response) => {
-	try {
-		const fileName = request.query.fileName
-
-		if (!fileName || typeof fileName !== 'string') {
-			response.status(418).send(`invalid query param :/`)
-			return
-		}
-
-		switch (fileName) {
-			case 'croc':
-				response.file(pathJoin(process.cwd(), '/public/croc.mp4'))
-				break
-
-			case 'gary':
-				response.file(pathJoin(process.cwd(), '/public/gary.png'))
-				break
-
-			default:
-				response.status(418).send(`invalid file name :/`)
-				break
-		}
-	} catch (error: any) {
-		response
-			.status(418)
-			.send(
-				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
-			)
-	}
-})
-
-hyperExpress
-	.use(Cors())
-	.listen(port)
+fastify
+	.listen({ port: PORT })
 	.then(async () => {
 		await onStart()
 		console.log(
-			`Hyper-Express server listening on port: ${port} ~ ${getCurrentDate()}`
+			`Fastify server listening on port: ${PORT} ~ ${getCurrentDate()}`
 		)
 	})
 	.catch((error: any) => {
 		console.log(
-			`Failed to start Hyper-Express server on port ${port}: Error - ${error} ~ ${getCurrentDate()}`
+			`Failed to start Fastify server on port ${PORT}: Error - ${error} ~ ${getCurrentDate()}`
 		)
 	})
 

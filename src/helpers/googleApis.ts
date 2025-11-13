@@ -41,11 +41,10 @@ export async function authorize({
 	async function loadSavedCredentialsIfExist() {
 		try {
 			const content = await filesystem.readFile(tokenPath)
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			const credentials = JSON.parse(content.toString())
 
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			return google.auth.fromJSON(credentials)
+			// oxlint-disable-next-line no-unused-vars
 		} catch (err) {
 			return null
 		}

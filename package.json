@@ -10,8 +10,8 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": "^22.0.0",
-		"pnpm": "^9.0.1"
+		"node": "^24.0.0",
+		"pnpm": "^10.12.4"
 	},
 	"source": "src/main.ts",
 	"module": "dist/module.js",
@@ -19,34 +19,28 @@
 		"serve": "pnpm build && pnpm start",
 		"start": "node ./dist/module.js",
 		"build": "parcel build --no-source-maps",
-		"lint-check": "eslint \"./src/*.ts\" && echo lint-check done",
-		"format-check": "prettier --check \"./src/**.ts\" && echo format-check done",
-		"build-check": "pnpm build && echo build-check done",
-		"checks": "pnpm lint-check && pnpm format-check && pnpm build",
+		"lint:check": "oxlint && echo lint:check done",
+		"format:check": "prettier --check \"./src/**.ts\" && echo format:check done",
+		"build:check": "pnpm build && echo build:check done",
+		"checks": "pnpm lint:check && pnpm format:check && pnpm build",
 		"prepare": "husky"
 	},
 	"dependencies": {
+		"@fastify/cors": "^11.1.0",
 		"@google-cloud/local-auth": "^3.0.1",
-		"cors": "^2.8.5",
+		"fastify": "^5.6.2",
 		"google-auth-library": "^9.14.1",
-		"googleapis": "^144.0.0",
-		"hyper-express": "^6.16.4"
+		"googleapis": "^144.0.0"
 	},
 	"devDependencies": {
 		"@parcel/config-default": "^2.12.0",
-		"@types/cors": "^2.8.17",
-		"@types/node": "^22.5.5",
-		"@types/serve-static": "^1.15.7",
-		"@typescript-eslint/eslint-plugin": "^7.18.0",
-		"@typescript-eslint/parser": "^7.18.0",
-		"eslint": "^8.57.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.2.1",
+		"@types/node": "^24.10.1",
 		"googleapis-common": "^7.2.0",
 		"husky": "^9.1.6",
+		"oxlint": "^1.28.0",
 		"parcel": "^2.12.0",
 		"prettier": "^3.3.3",
-		"typescript": "^5.6.2",
-		"undici": "^6.19.8"
+		"typescript": "^5.9.3",
+		"undici": "^7.16.0"
 	}
 }

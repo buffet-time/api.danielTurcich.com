@@ -1,0 +1,10 @@
+{
+	"ignorePatterns": [
+		"dist",
+		".parcel-cache",
+		".husky",
+		"node_modules",
+		"public",
+		"src/credentials"
+	]
+}

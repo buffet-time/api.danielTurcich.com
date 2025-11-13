@@ -12,9 +12,7 @@ export function isNum(value: string) {
 // Checks every 30 minutes to update the cached spreadsheets
 export function setupIntervals() {
 	async function checkLatestSpreadsheet() {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const params = spreadsheets.at(-1)!
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const retrievedSpreadsheetCurrentYear = await getSheets(
 			params.id,
 			params.range
@@ -95,9 +93,9 @@ export async function initializeSheets() {
 			questionMarkScoreCount++
 		}
 
+		// oxlint-disable-next-line no-unused-expressions
 		curYear > 1959
-			? // @ts-expect-error - blah blah
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+			? // @ts-expect-error - fix this!!!
 				releasePerYear[ReleasesIn[current[Release.year].slice(0, 3) + '0s']]++
 			: releasePerYear[ReleasesIn['1950s']]++
 	})
