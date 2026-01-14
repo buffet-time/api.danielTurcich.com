@@ -31,6 +31,10 @@ export const spreadsheets: SpreadsheetParams[] = [
 	{
 		id: '1GFwmZwMiBBWvA6ZZx4M3ITRjrCDvF5tif15A0cfQhug',
 		range: 'Main!A2:G' // 2025
+	},
+	{
+		id: '1bSwQhl5fsOEj_OUIBl4cL2huYRujtIYf3uA5bnTv1iE',
+		range: 'Main!A2:G' // 2026
 	}
 ]
 

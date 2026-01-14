@@ -8,6 +8,6 @@ Using [PNPM](https://pnpm.io/), [Parcel](https://parceljs.org/), and [Fastify](h
 
 ## For my own purposes to reference when i inevitably forget :)
 
-`$ pm2 start "pnpm serve" --name api`
+`$ pm2 start "pnpm serve" --name danielTurcichApi`
 
 `$ sudo nano /etc/caddy/Caddyfile`
