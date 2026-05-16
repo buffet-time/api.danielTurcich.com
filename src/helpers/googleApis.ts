@@ -2,24 +2,16 @@ import filesystem from 'fs/promises'
 import path from 'path'
 import { authenticate } from '@google-cloud/local-auth'
 import { google } from 'googleapis'
-import type { OAuth2Client } from 'googleapis-common'
 import type { GoogleCredentials } from '../types/googleTypes'
 
 // If modifying these scopes, delete token.json.
 // const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-const credentialsPath = path.join(
-	process.cwd(),
-	'../src/credentials/googleCreds.json'
-)
+const credentialsPath = path.join(process.cwd(), '../src/credentials/googleCreds.json')
 
-export async function authorize({
-	scopes,
-	tokenPath
-}: {
-	scopes: string[]
-	tokenPath: string
-}) {
-	let client = (await loadSavedCredentialsIfExist()) as OAuth2Client | null
+type AuthClient = Awaited<ReturnType<typeof authenticate>>
+
+export async function authorize({ scopes, tokenPath }: { scopes: string[]; tokenPath: string }) {
+	let client = (await loadSavedCredentialsIfExist()) as AuthClient | null
 
 	if (client) {
 		return client
@@ -27,7 +19,7 @@ export async function authorize({
 
 	client = await authenticate({
 		scopes: scopes,
-		keyfilePath: credentialsPath
+		keyfilePath: credentialsPath,
 	})
 
 	if (client.credentials) {
@@ -60,7 +52,7 @@ export async function authorize({
 			type: 'authorized_user',
 			client_id: key.client_id,
 			client_secret: key.client_secret,
-			refresh_token: client?.credentials.refresh_token
+			refresh_token: client?.credentials.refresh_token,
 		})
 
 		await filesystem.writeFile(tokenPath, payload)

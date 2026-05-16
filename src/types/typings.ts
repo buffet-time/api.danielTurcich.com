@@ -5,7 +5,7 @@ export enum Release {
 	type,
 	year,
 	genre,
-	comments
+	comments,
 }
 
 export interface AlbumReturn {
@@ -55,7 +55,7 @@ interface Album {
 		{
 			'#text': string
 			size: 'extralarge'
-		}
+		},
 	]
 	streamable: string
 	mbid: string
@@ -84,7 +84,7 @@ export enum ReleasesIn {
 	'1990s',
 	'2000s',
 	'2010s',
-	'2020s'
+	'2020s',
 }
 
 interface TopAlbumsArrayImageObject {

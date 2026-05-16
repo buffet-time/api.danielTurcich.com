@@ -17,5 +17,8 @@
 		"**/credentials": true
 	},
 	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"oxc.enable": true
+	"oxc.enable": true,
+	"[typescript]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	}
 }

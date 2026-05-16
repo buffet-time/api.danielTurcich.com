@@ -7,8 +7,10 @@ import {
 	getCurrentDate,
 	getSheets,
 	initializeSheets,
-	setupIntervals
+	setupIntervals,
 } from './helpers/main.helpers.js'
+import type { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts'
+import type { ServerType } from './types/general'
 
 let releasesArray: string
 let cachedStatsObject: string
@@ -24,105 +26,126 @@ export function setCachedStatsObject(newVal: string) {
 	cachedStatsObject = newVal
 }
 
-const fastify = Fastify()
-await fastify.register(fastifyCors, {
+const server: ServerType = Fastify().withTypeProvider<JsonSchemaToTsProvider>()
+await server.register(fastifyCors, {
 	origin: true,
 	methods: 'GET',
-	allowedHeaders: 'Content-Type, Authorization'
+	allowedHeaders: 'Content-Type, Authorization',
 })
 
-fastify.get('/Releases', (_request, response) => {
+await server.register(import('@fastify/rate-limit'), {
+	max: 10,
+	timeWindow: '1 minute',
+})
+
+server.get('/Releases', (_request, response) => {
 	try {
+		if (releasesArray === '') {
+			response.send(`ERROR, it's empty in here`)
+			return
+		}
 		response.send(releasesArray)
 	} catch (error: any) {
 		console.log(`Error in /Releases request:\n ${error}`)
 		response
 			.status(418)
-			.send(
-				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
-			)
+			.send(`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`)
 	}
 })
 
-fastify.get('/Stats', (_request, response) => {
+server.get('/Stats', (_request, response) => {
 	try {
 		response.send(cachedStatsObject)
 	} catch (error: any) {
 		console.log(`Error in /Stats request:\n ${error}`)
 		response
 			.status(418)
-			.send(
-				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
-			)
+			.send(`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`)
 	}
 })
 
 // example request:
 // http://localhost:2080/Sheets?id=1c2LLIH5e7voXgWQ_tiJKrDhx14VVevPEdmi6Yv1AE84&range=Main!A2:G
-fastify.get('/Sheets', async (request: any, response) => {
-	try {
-		const id = request.query.id
-		const range = request.query.range as string
-		const index = request.query.index as string | undefined
-		const rows = request.query.rows as string | undefined
-		const nonMusic = request.query.nonmusic as string | undefined
+server.get(
+	'/Sheets',
+	{
+		schema: {
+			querystring: {
+				type: 'object',
+				properties: {
+					// The search query
+					id: { type: 'string' },
+					// whether or not to return results noted as adult, defaults to false
+					range: { type: 'string' },
+					// year of the release to further narrow down the search, no default
+					index: { type: 'string' },
+					rows: { type: 'string' },
+					nonmusic: { type: 'string' },
+				},
+				required: ['id', 'range'],
+			},
+		},
+	},
+	async (request, response) => {
+		try {
+			const sheetsReturn = await getSheets(
+				request.query.id,
+				request.query.range,
+				request.query.index,
+				request.query.rows,
+				request.query.nonmusic,
+			)
 
-		if (!id || !range || typeof id !== 'string' || typeof range !== 'string') {
+			if (sheetsReturn === null) {
+				response.send(
+					`Rut ro... What happened in /sheets?: ${request.query.id}, ${request.query.range}, ${request.query.index}, ${request.query.rows}, ${request.query.nonmusic}, ${sheetsReturn} ~ ${getCurrentDate()}`,
+				)
+			}
+
+			response.send(JSON.stringify(sheetsReturn))
+		} catch (error: any) {
 			response
 				.status(418)
-				.send(
-					`ah fuck I can't believe you've done this\nincorrect query params there bud`
-				)
-			return
+				.send(`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`)
 		}
+	},
+)
 
-		const sheetsReturn = await getSheets(id, range, index, rows, nonMusic)
-
-		if (sheetsReturn === null) {
-			response.send(
-				`Rut ro... What happened in /sheets?: ${id}, ${range}, ${index}, ${rows}, ${nonMusic}, ${sheetsReturn} ~ ${getCurrentDate()}`
-			)
-		}
-
-		response.send(JSON.stringify(sheetsReturn))
-	} catch (error: any) {
-		response
-			.status(418)
-			.send(
-				`ah fuck I can't believe you've done this\n uh, how did this happen? ${error}`
-			)
-	}
-})
-
-fastify
+server
 	.listen({ port: PORT })
 	.then(async () => {
 		await onStart()
-		console.log(
-			`Fastify server listening on port: ${PORT} ~ ${getCurrentDate()}`
-		)
+		console.log(`Fastify server listening on port: ${PORT} ~ ${getCurrentDate()}`)
 	})
 	.catch((error: any) => {
 		console.log(
-			`Failed to start Fastify server on port ${PORT}: Error - ${error} ~ ${getCurrentDate()}`
+			`Failed to start Fastify server on port ${PORT}: Error - ${error} ~ ${getCurrentDate()}`,
 		)
 	})
 
 async function onStart() {
 	try {
-		const sheetsTokenPath = pathJoin(
-			process.cwd(),
-			'./src/credentials/sheetsToken.json'
-		)
-		const sheetsScopes = [
-			'https://www.googleapis.com/auth/spreadsheets.readonly'
-		] // If modifying these scopes, delete token.json.
+		const sheetsTokenPath = pathJoin(process.cwd(), './src/credentials/sheetsToken.json')
+		const sheetsScopes = ['https://www.googleapis.com/auth/spreadsheets.readonly'] // If modifying these scopes, delete token.json.
 
 		const sheetsAuthClient = await authorize({
 			scopes: sheetsScopes,
-			tokenPath: sheetsTokenPath
+			tokenPath: sheetsTokenPath,
 		})
-		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient })
+
+		sheets = google.sheets({ version: 'v4', auth: sheetsAuthClient as any })
+
+		google.options({
+			retryConfig: {
+				retry: 3,
+				retryDelay: 500,
+				statusCodesToRetry: [
+					[100, 199],
+					[429, 429],
+					[500, 599],
+				],
+			},
+		})
 	} catch (error: any) {
 		throw console.log(`Error in onStart(): ${error} ~ ${getCurrentDate()}`)
 	}

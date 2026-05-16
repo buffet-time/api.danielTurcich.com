@@ -6,56 +6,53 @@ import { getCurrentDate } from './main.helpers'
 export const spreadsheets: SpreadsheetParams[] = [
 	{
 		id: '1tn0BmleHcs0okzWKhUnyOCWUPD422HvutpNQNzdAAIk',
-		range: 'Main!A2:F' // before
+		range: 'Main!A2:F', // before
 	},
 	{
 		id: '1dmETb3Ybqs8Dhez_kP2DHiXR_Gqw-X56qsXDHYyTH1w',
-		range: 'Main!A2:F' // 2020
+		range: 'Main!A2:F', // 2020
 	},
 	{
 		id: '18V5oypFBW3Bu_tHxfTL-iSbb9ALYrCJlMwLhpPmp72M',
-		range: 'Main!A2:G' // 2021
+		range: 'Main!A2:G', // 2021
 	},
 	{
 		id: '1lyFD7uLMT0mRdGkKwvbIm_2pqk2YJU7rtRQVhHq-nwU',
-		range: 'Main!A2:G' // 2022
+		range: 'Main!A2:G', // 2022
 	},
 	{
 		id: '1kbSckEbjlI55bCds6qB0bE4h2osHJjbTzXfFoBHnqQA',
-		range: 'Main!A2:G' // 2023
+		range: 'Main!A2:G', // 2023
 	},
 	{
 		id: '1c2LLIH5e7voXgWQ_tiJKrDhx14VVevPEdmi6Yv1AE84',
-		range: 'Main!A2:G' // 2024
+		range: 'Main!A2:G', // 2024
 	},
 	{
 		id: '1GFwmZwMiBBWvA6ZZx4M3ITRjrCDvF5tif15A0cfQhug',
-		range: 'Main!A2:G' // 2025
+		range: 'Main!A2:G', // 2025
 	},
 	{
 		id: '1bSwQhl5fsOEj_OUIBl4cL2huYRujtIYf3uA5bnTv1iE',
-		range: 'Main!A2:G' // 2026
-	}
+		range: 'Main!A2:G', // 2026
+	},
 ]
 
 export async function getRows(
 	spreadsheetId: string,
 	range: string,
-	index?: string
+	index?: string,
 ): Promise<string[][] | string[] | string | null> {
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
 				spreadsheetId: spreadsheetId,
-				range: range
+				range: range,
 			},
 			(error, response) => {
 				if (error ?? !response?.data.values) {
-					// 0|api      |  Error: Internal error encountered. ~ 1HP5u_A2j8YPBIyH5pU9kpOtaEPya Coordinated Universal Time)
-					// 0|api      | Error in getRows():
-					// 0|api      |  Error: Internal error encountered. ~ 1HP5u_A2j8YPBIyH5pU9kpOtaEPya Coordinated Universal Time)
 					console.log(
-						`Error in getRows():\n ${error as any} ~ ${spreadsheetId} ${range} ${index} ~ ${getCurrentDate()}`
+						`Error in getRows():\n ${error as any} ~ ${spreadsheetId} ${range} ${index} ~ ${getCurrentDate()}`,
 					)
 					resolve(null)
 					return
@@ -69,26 +66,24 @@ export async function getRows(
 
 					resolve(response.data.values)
 				} catch (error: any) {
-					console.log(
-						`blargh i need to update my bad old code: ${error} ~ ${getCurrentDate()}`
-					)
+					console.log(`blargh i need to update my bad old code: ${error} ~ ${getCurrentDate()}`)
 					resolve(null)
 				}
-			}
-		)
+			},
+		),
 	)
 }
 
 export async function getNumberOfRows(
 	spreadsheetId: string,
 	range: string,
-	nonMusic?: boolean
+	nonMusic?: boolean,
 ): Promise<number | string> {
 	return new Promise((resolve) =>
 		sheets.spreadsheets.values.get(
 			{
 				spreadsheetId: spreadsheetId,
-				range: range
+				range: range,
 			},
 			(error, response) => {
 				try {
@@ -99,9 +94,7 @@ export async function getNumberOfRows(
 
 					if (response?.data.values) {
 						for (let n = response.data.values.length - 1; n > 0; n--) {
-							if (
-								rowIsFilledOut(response.data.values[n] as string[], nonMusic)
-							) {
+							if (rowIsFilledOut(response.data.values[n] as string[], nonMusic)) {
 								resolve(n + 1)
 							}
 						}
@@ -109,8 +102,8 @@ export async function getNumberOfRows(
 				} catch (error: any) {
 					console.log(`blargh i need to update my bad old code: ${error}`)
 				}
-			}
-		)
+			},
+		),
 	)
 }
 

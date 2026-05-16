@@ -4,43 +4,48 @@
 	"private": true,
 	"description": "API for danielTurcich.com",
 	"author": {
-		"email": "packagejson@danielTurcich.com",
 		"name": "Daniel Turcich",
+		"email": "packagejson@danielTurcich.com",
 		"url": "https://danielTurcich.com"
 	},
-	"type": "module",
-	"engines": {
-		"node": "^24.0.0",
-		"pnpm": "^10.12.4"
-	},
 	"source": "src/main.ts",
+	"type": "module",
 	"module": "dist/module.js",
+	"packageManager": "pnpm@11.1.2",
+	"engineStrict": true,
+	"engines": {
+		"node": "^26.1.0",
+		"pnpm": "^11.1.2"
+	},
 	"scripts": {
 		"serve": "pnpm build && pnpm start",
 		"start": "node ./dist/module.js",
 		"build": "parcel build --no-source-maps",
 		"lint:check": "oxlint && echo lint:check done",
-		"format:check": "prettier --check \"./src/**.ts\" && echo format:check done",
+		"format:fix": "oxfmt",
+		"format:check": "oxfmt --check",
 		"build:check": "pnpm build && echo build:check done",
 		"checks": "pnpm lint:check && pnpm format:check && pnpm build",
 		"prepare": "husky"
 	},
 	"dependencies": {
-		"@fastify/cors": "^11.1.0",
+		"@fastify/cors": "^11.2.0",
+		"@fastify/rate-limit": "^10.3.0",
+		"@fastify/type-provider-json-schema-to-ts": "^5.0.0",
 		"@google-cloud/local-auth": "^3.0.1",
-		"fastify": "^5.6.2",
-		"google-auth-library": "^9.14.1",
-		"googleapis": "^144.0.0"
+		"fastify": "^5.8.5",
+		"google-auth-library": "^10.6.2",
+		"googleapis": "^171.4.0"
 	},
 	"devDependencies": {
-		"@parcel/config-default": "^2.12.0",
-		"@types/node": "^24.10.1",
-		"googleapis-common": "^7.2.0",
-		"husky": "^9.1.6",
-		"oxlint": "^1.28.0",
-		"parcel": "^2.12.0",
-		"prettier": "^3.3.3",
-		"typescript": "^5.9.3",
-		"undici": "^7.16.0"
+		"@parcel/config-default": "^2.16.4",
+		"@types/node": "^25.8.0",
+		"googleapis-common": "^8.0.1",
+		"husky": "^9.1.7",
+		"oxfmt": "^0.49.0",
+		"oxlint": "^1.64.0",
+		"parcel": "^2.16.4",
+		"typescript": "^6.0.3",
+		"undici": "^8.3.0"
 	}
 }

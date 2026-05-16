@@ -9,7 +9,7 @@ declare global {
 // This is a wrapper around the Fetch WebAPI to handle errors without any fuss
 export async function ProperFetch(
 	input: RequestInfo,
-	init?: RequestInit | undefined
+	init?: RequestInit | undefined,
 ): Promise<any> {
 	try {
 		const response = init ? await fetch(input, init) : await fetch(input)
@@ -18,9 +18,7 @@ export async function ProperFetch(
 			return await response.json()
 		}
 
-		console.error(
-			'Responded with an error:' + ((await response.json()) as string)
-		)
+		console.error('Responded with an error:' + ((await response.json()) as string))
 		return null
 	} catch (error: any) {
 		console.error(`Error in fetch call: ${error}`)

@@ -13,12 +13,12 @@ export function isNum(value: string) {
 export function setupIntervals() {
 	async function checkLatestSpreadsheet() {
 		const params = spreadsheets.at(-1)!
-		const retrievedSpreadsheetCurrentYear = await getSheets(
-			params.id,
-			params.range
-		)
+		const retrievedSpreadsheetCurrentYear = await getSheets(params.id, params.range)
 
-		if (retrievedSpreadsheetCurrentYear !== cachedSpreadsheetCurrentYear) {
+		if (
+			JSON.stringify(retrievedSpreadsheetCurrentYear) !==
+			JSON.stringify(cachedSpreadsheetCurrentYear)
+		) {
 			await initializeSheets()
 		}
 	}
@@ -29,11 +29,11 @@ export function setupIntervals() {
 }
 
 export async function initializeSheets() {
-	const spreadsheetArrays = await Promise.all(
-		spreadsheets.map((current) => {
-			return getSheets(current.id, current.range) as unknown as string[][]
-		})
-	)
+	const spreadsheetArrays: string[][][] = []
+	for (const current of spreadsheets) {
+		const sheetData = (await getSheets(current.id, current.range)) as unknown as string[][]
+		spreadsheetArrays.push(sheetData)
+	}
 
 	if (!spreadsheetArrays) {
 		return
@@ -41,19 +41,17 @@ export async function initializeSheets() {
 
 	cachedSpreadsheetCurrentYear = spreadsheetArrays.at(-1)!
 
-	const nonJsonReleasesArray = spreadsheetArrays
-		.flat()
-		.filter((current: string[], index) => {
-			// makes sure to trim whitespaces of data coming in from the most recent year
-			// in sheets select all cells > data > data cleanup > trim whitespace
-			if (index === spreadsheetArrays.length - 1) {
-				current.forEach((element) => {
-					element.trim()
-				})
-			}
-			// makes sure to not include any not fully written reviews
-			return current.length > 5 && current[Release.score]
-		})
+	const nonJsonReleasesArray = spreadsheetArrays.flat().filter((current: string[], index) => {
+		// makes sure to trim whitespaces of data coming in from the most recent year
+		// in sheets select all cells > data > data cleanup > trim whitespace
+		if (index === spreadsheetArrays.length - 1) {
+			current.forEach((element) => {
+				element.trim()
+			})
+		}
+		// makes sure to not include any not fully written reviews
+		return current.length > 5 && current[Release.score]
+	})
 
 	const artistArray: string[] = []
 	const currentYear = new Date().getFullYear()
@@ -93,10 +91,11 @@ export async function initializeSheets() {
 			questionMarkScoreCount++
 		}
 
+		// This is being used it's just bad code that im too lazy to fix atm
 		// oxlint-disable-next-line no-unused-expressions
 		curYear > 1959
-			? // @ts-expect-error - fix this!!!
-				releasePerYear[ReleasesIn[current[Release.year].slice(0, 3) + '0s']]++
+			? // @ts-expect-error - you are allowed to index arrays by string!
+				releasePerYear[ReleasesIn[`${current[Release.year].slice(0, 3)}0s`]]++
 			: releasePerYear[ReleasesIn['1950s']]++
 	})
 
@@ -108,8 +107,8 @@ export async function initializeSheets() {
 			numberOfReleases: scoreCount + questionMarkScoreCount,
 			releasesPerYear: releasePerYear,
 			currentYear: currentYear,
-			earliestYear: earliestYear
-		} satisfies StatsObject)
+			earliestYear: earliestYear,
+		} satisfies StatsObject),
 	)
 
 	setReleasesArray(JSON.stringify(nonJsonReleasesArray))
@@ -120,7 +119,7 @@ export async function getSheets(
 	range: string,
 	index?: string,
 	rows?: string,
-	nonMusic?: string
+	nonMusic?: string,
 ) {
 	switch (true) {
 		// prettier-ignore
