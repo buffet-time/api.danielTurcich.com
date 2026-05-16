@@ -11,6 +11,7 @@ import {
 } from './helpers/main.helpers.js'
 import type { JsonSchemaToTsProvider } from '@fastify/type-provider-json-schema-to-ts'
 import type { ServerType } from './types/general'
+import RateLimit from '@fastify/rate-limit'
 
 let releasesArray: string
 let cachedStatsObject: string
@@ -33,8 +34,8 @@ await server.register(fastifyCors, {
 	allowedHeaders: 'Content-Type, Authorization',
 })
 
-await server.register(import('@fastify/rate-limit'), {
-	max: 10,
+await server.register(RateLimit, {
+	max: 50,
 	timeWindow: '1 minute',
 })
 
