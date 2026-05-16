@@ -11,12 +11,6 @@
 	"source": "src/main.ts",
 	"type": "module",
 	"module": "dist/module.js",
-	"packageManager": "pnpm@11.1.2",
-	"engineStrict": true,
-	"engines": {
-		"node": "^26.1.0",
-		"pnpm": "^11.1.2"
-	},
 	"scripts": {
 		"serve": "pnpm build && pnpm start",
 		"start": "node ./dist/module.js",
@@ -47,5 +41,11 @@
 		"parcel": "^2.16.4",
 		"typescript": "^6.0.3",
 		"undici": "^8.3.0"
-	}
+	},
+	"engines": {
+		"node": "^26.1.0",
+		"pnpm": "^11.1.2"
+	},
+	"engineStrict": true,
+	"packageManager": "pnpm@11.1.2"
 }

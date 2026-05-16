@@ -2,6 +2,7 @@ import { setCachedStatsObject, setReleasesArray } from '../main'
 import { Release, ReleasesIn, StatsObject } from '../types/typings'
 import { spreadsheets, getNumberOfRows, getRows } from './spreadsheet'
 
+const THIRTY_MINUTES = 1_800_000
 let cachedSpreadsheetCurrentYear: string[][]
 
 // for readability
@@ -25,7 +26,7 @@ export function setupIntervals() {
 
 	setInterval(() => {
 		void checkLatestSpreadsheet()
-	}, 1_800_000)
+	}, THIRTY_MINUTES)
 }
 
 export async function initializeSheets() {
